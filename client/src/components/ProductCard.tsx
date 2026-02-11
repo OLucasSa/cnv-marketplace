@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Image as ImageIcon } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
   onViewDetails: (product: Product) => void;
 }
 
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f3f4f6" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="16" fill="%239ca3af" text-anchor="middle" dominant-baseline="middle"%3EImagem não disponível%3C/text%3E%3C/svg%3E';
+
 export default function ProductCard({ product, onViewDetails }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const imageUrl = product.image && product.image.trim() ? product.image : null;
 
   return (
     <div
@@ -18,12 +21,19 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image */}
-      <div className="relative h-64 bg-gray-100 overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+      <div className="relative h-64 bg-gray-100 overflow-hidden flex items-center justify-center">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-muted-foreground">
+            <ImageIcon className="h-12 w-12 mb-2 opacity-50" />
+            <span className="text-sm">Sem imagem</span>
+          </div>
+        )}
         {/* Overlay com cores disponíveis */}
         {isHovered && (
           <div className="absolute inset-0 bg-black/40 flex items-end p-4 transition-opacity duration-300">
@@ -45,7 +55,6 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
           </div>
         )}
       </div>
-
       {/* Product Info */}
       <div className="p-4">
         <p className="text-xs font-semibold text-accent uppercase tracking-wider mb-2">
@@ -57,7 +66,6 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
           {product.description}
         </p>
-
         {/* Specifications Preview */}
         <div className="mb-4 space-y-1">
           <p className="text-xs text-muted-foreground">
@@ -72,19 +80,15 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
             <span className="font-semibold">Cores:</span> {product.colors.length} disponíveis
           </p>
         </div>
-
         {/* CTA Button */}
         <Button
           onClick={() => onViewDetails(product)}
           className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 group/btn"
         >
           Ver Detalhes
-          <ChevronRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+          <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
         </Button>
       </div>
-
-      {/* Diagonal accent line */}
-      <div className="absolute top-0 right-0 w-12 h-12 bg-accent/10 transform rotate-45 -translate-y-6 -translate-x-6 transition-all duration-300 group-hover:scale-150" />
     </div>
   );
 }
