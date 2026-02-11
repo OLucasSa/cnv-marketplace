@@ -47,3 +47,35 @@
 - [x] Verificar live updates no marketplace (tRPC em tempo real)
 - [x] Corrigir integração Home com banco de dados
 - [x] Criar checkpoint final
+
+
+## Sistema Multi-usuário com Roles (Concluído)
+
+### Fase 1: Schema e Database
+- [x] Atualizar schema de usuários com role (admin/editor)
+- [x] Criar procedures para gerenciar usuários
+- [x] Migrar usuários existentes
+
+### Fase 2: Backend com Verificação de Roles
+- [x] Criar editorProcedure (acesso a produtos apenas)
+- [x] Atualizar rotas de produtos com verificação de role
+- [x] Criar rotas de gerenciamento de usuários (admin only)
+- [x] Adicionar testes de permissões
+
+### Fase 3: Interface de Usuários (Admin)
+- [x] Criar página de gerenciamento de usuários
+- [x] Tabela com lista de usuários
+- [x] Botões para promover/rebaixar role
+- [x] Botão para remover usuário
+
+### Fase 4: Adaptação de Interface por Role
+- [x] Editor vê apenas seção de produtos
+- [x] Editor não vê menu de usuários/configurações
+- [x] Admin vê todas as seções
+- [x] Proteção de rotas por role no frontend
+
+### Fase 5: Testes e Deploy
+- [x] Testar acesso Admin (6 testes passando)
+- [x] Testar acesso Editor (6 testes passando)
+- [x] Testar permissões negadas (6 testes passando)
+- [x] Criar checkpoint final

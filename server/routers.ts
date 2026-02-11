@@ -1,9 +1,10 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router, adminProcedure } from "./_core/trpc";
+import { publicProcedure, router, adminProcedure, editorProcedure } from "./_core/trpc";
 import { z } from "zod";
 import * as productHelpers from "./products";
+import * as userHelpers from "./users";
 import { uploadRouter } from "./routers/upload";
 
 export const appRouter = router({
@@ -21,10 +22,10 @@ export const appRouter = router({
 
   products: router({
     list: publicProcedure.query(() => productHelpers.getActiveProducts()),
-    all: adminProcedure.query(() => productHelpers.getAllProducts()),
+    all: editorProcedure.query(() => productHelpers.getAllProducts()),
     getById: publicProcedure.input(z.number()).query(({ input }) => productHelpers.getProductById(input)),
-    stats: adminProcedure.query(() => productHelpers.getProductStats()),
-    create: adminProcedure
+    stats: editorProcedure.query(() => productHelpers.getProductStats()),
+    create: editorProcedure
       .input(z.object({
         name: z.string().min(1),
         description: z.string().optional(),
@@ -39,7 +40,7 @@ export const appRouter = router({
         features: z.string().optional(),
       }))
       .mutation(({ input }) => productHelpers.createProduct(input)),
-    update: adminProcedure
+    update: editorProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().optional(),
@@ -59,10 +60,28 @@ export const appRouter = router({
         const { id, ...data } = input;
         return productHelpers.updateProduct(id, data);
       }),
-    delete: adminProcedure
+    delete: editorProcedure
       .input(z.number())
       .mutation(({ input }) => productHelpers.softDeleteProduct(input)),
   }),
+
+  users: router({
+    all: adminProcedure.query(() => userHelpers.getAllUsers()),
+    getById: adminProcedure.input(z.number()).query(({ input }) => userHelpers.getUserById(input)),
+    updateRole: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        role: z.enum(["admin", "editor", "user"]),
+      }))
+      .mutation(({ input }) => userHelpers.updateUserRole(input.id, input.role)),
+    delete: adminProcedure
+      .input(z.number())
+      .mutation(({ input }) => userHelpers.deleteUser(input)),
+    listByRole: adminProcedure
+      .input(z.enum(["admin", "editor", "user"]))
+      .query(({ input }) => userHelpers.getUsersByRole(input)),
+  }),
+
   upload: uploadRouter,
 });
 
