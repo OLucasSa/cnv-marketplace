@@ -45,4 +45,5 @@
 - [x] Testar autenticação (vitest)
 - [x] Testar upload de imagens (componente criado)
 - [x] Verificar live updates no marketplace (tRPC em tempo real)
-- [ ] Criar checkpoint final
+- [x] Corrigir integração Home com banco de dados
+- [x] Criar checkpoint final

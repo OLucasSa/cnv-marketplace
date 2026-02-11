@@ -1,15 +1,20 @@
 import { useState } from 'react';
-import { products, categories } from '@/lib/products';
-import { Product } from '@/lib/products';
+import { trpc } from '@/lib/trpc';
+import { categories } from '@/lib/products';
+import type { Product } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import ProductModal from '@/components/ProductModal';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Loader2 } from 'lucide-react';
 
 export default function Home() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Buscar produtos do banco de dados via tRPC
+  const { data: products = [], isLoading } = trpc.products.list.useQuery();
 
   const filteredProducts =
     selectedCategory === 'all'
@@ -20,6 +25,14 @@ export default function Home() {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8 text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -144,18 +157,35 @@ export default function Home() {
             {/* Products Grid */}
             <TabsContent value={selectedCategory} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product, idx) => (
-                  <div
-                    key={product.id}
-                    className="animate-in fade-in slide-in-from-bottom-4"
-                    style={{ animationDelay: `${idx * 50}ms` }}
-                  >
-                    <ProductCard
-                      product={product}
-                      onViewDetails={handleViewDetails}
-                    />
-                  </div>
-                ))}
+                {filteredProducts.map((product, idx) => {
+                  const productData = {
+                    id: String(product.id),
+                    name: product.name,
+                    category: product.category,
+                    price: product.price,
+                    image: product.imageUrl || '',
+                    description: product.description || '',
+                    colors: product.colors ? JSON.parse(product.colors) : [],
+                    sizes: product.sizes ? JSON.parse(product.sizes) : [],
+                    specifications: {
+                      material: 'Personalizado',
+                      features: product.features ? product.features.split(',') : [],
+                    },
+                    line: 'premium' as const,
+                  };
+                  return (
+                    <div
+                      key={product.id}
+                      className="animate-in fade-in slide-in-from-bottom-4"
+                      style={{ animationDelay: `${idx * 50}ms` }}
+                    >
+                      <ProductCard
+                        product={productData}
+                        onViewDetails={handleViewDetails}
+                      />
+                    </div>
+                  );
+                })}
               </div>
               {filteredProducts.length === 0 && (
                 <div className="text-center py-12">
