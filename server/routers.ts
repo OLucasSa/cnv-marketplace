@@ -82,21 +82,7 @@ export const appRouter = router({
       .query(({ input }) => userHelpers.getUsersByRole(input)),
   }),
 
-   upload: uploadRouter,
-  settings: router({
-    getHeroImage: publicProcedure.query(() => {
-      const { getHeroImage } = require('./settings');
-      return getHeroImage();
-    }),
-    updateHeroImage: adminProcedure
-      .input(z.object({
-        heroImageUrl: z.string(),
-        heroImageKey: z.string(),
-      }))
-      .mutation(({ input }) => {
-        const { updateHeroImage } = require('./settings');
-        return updateHeroImage(input.heroImageUrl, input.heroImageKey);
-      }),
-  }),
+  upload: uploadRouter,
 });
+
 export type AppRouter = typeof appRouter;

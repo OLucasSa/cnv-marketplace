@@ -1,76 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Product } from '@/lib/products';
+import { useState } from 'react';
+import { trpc } from '@/lib/trpc';
 import { categories } from '@/lib/products';
+import type { Product } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import ProductModal from '@/components/ProductModal';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { trpc } from '@/lib/trpc';
-
-function HeroImage() {
-  const [heroImage, setHeroImage] = useState<string | null>(null);
-  const { data: settings } = trpc.settings.getHeroImage.useQuery();
-
-  useEffect(() => {
-    if (settings?.heroImageUrl) {
-      setHeroImage(settings.heroImageUrl);
-    }
-  }, [settings]);
-
-  return (
-    <div className="relative h-96 hidden md:block">
-      {heroImage ? (
-        <img
-          src={heroImage}
-          alt="Hero"
-          className="w-full h-full object-cover rounded-3xl"
-        />
-      ) : (
-        <>
-          <div className="absolute inset-0 bg-accent/20 rounded-3xl transform rotate-6" />
-          <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-6xl font-bold text-white/20 heading">C.N.V</p>
-              <p className="text-white/30 mt-4 text-lg">Gravação a Laser Premium</p>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-// Adapter para converter dados do banco para o tipo Product esperado
-function adaptDatabaseProduct(dbProduct: any): Product {
-  const colors = dbProduct.colors ? JSON.parse(dbProduct.colors) : [];
-  const specifications = dbProduct.specifications ? JSON.parse(dbProduct.specifications) : {};
-  
-  return {
-    id: String(dbProduct.id),
-    name: dbProduct.name,
-    category: dbProduct.category,
-    description: dbProduct.description || '',
-    image: dbProduct.imageUrl || '',
-    colors: Array.isArray(colors) ? colors : [],
-    specifications: {
-      material: specifications.material || 'Não especificado',
-      capacity: specifications.capacity,
-      dimensions: specifications.dimensions,
-      features: Array.isArray(specifications.features) ? specifications.features : [],
-    },
-    price: dbProduct.price || 'Consultar',
-    line: 'traditional' as const,
-  };
-}
+import { Loader2 } from 'lucide-react';
 
 export default function Home() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   // Buscar produtos do banco de dados via tRPC
-  const { data: dbProducts = [] } = trpc.products.list.useQuery();
-  const products = dbProducts.map(adaptDatabaseProduct);
+  const { data: products = [], isLoading } = trpc.products.list.useQuery();
 
   const filteredProducts =
     selectedCategory === 'all'
@@ -81,6 +25,14 @@ export default function Home() {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8 text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -145,8 +97,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Hero Image */}
-          <HeroImage />
+          {/* Right Decorative Element */}
+          <div className="relative h-96 hidden md:block">
+            <div className="absolute inset-0 bg-accent/20 rounded-3xl transform rotate-6" />
+            <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-6xl font-bold text-white/20 heading">C.N.V</p>
+                <p className="text-white/30 mt-4 text-lg">Gravação a Laser Premium</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Diagonal divider */}
@@ -197,18 +157,35 @@ export default function Home() {
             {/* Products Grid */}
             <TabsContent value={selectedCategory} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product, idx) => (
-                  <div
-                    key={product.id}
-                    className="animate-in fade-in slide-in-from-bottom-4"
-                    style={{ animationDelay: `${idx * 50}ms` }}
-                  >
-                    <ProductCard
-                      product={product}
-                      onViewDetails={handleViewDetails}
-                    />
-                  </div>
-                ))}
+                {filteredProducts.map((product, idx) => {
+                  const productData = {
+                    id: String(product.id),
+                    name: product.name,
+                    category: product.category,
+                    price: product.price,
+                    image: product.imageUrl || '',
+                    description: product.description || '',
+                    colors: product.colors ? JSON.parse(product.colors) : [],
+                    sizes: product.sizes ? JSON.parse(product.sizes) : [],
+                    specifications: {
+                      material: 'Personalizado',
+                      features: product.features ? product.features.split(',') : [],
+                    },
+                    line: 'premium' as const,
+                  };
+                  return (
+                    <div
+                      key={product.id}
+                      className="animate-in fade-in slide-in-from-bottom-4"
+                      style={{ animationDelay: `${idx * 50}ms` }}
+                    >
+                      <ProductCard
+                        product={productData}
+                        onViewDetails={handleViewDetails}
+                      />
+                    </div>
+                  );
+                })}
               </div>
               {filteredProducts.length === 0 && (
                 <div className="text-center py-12">
