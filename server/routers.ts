@@ -22,7 +22,7 @@ export const appRouter = router({
 
   products: router({
     list: publicProcedure.query(() => productHelpers.getActiveProducts()),
-    all: editorProcedure.query(() => productHelpers.getAllProducts()),
+    all: publicProcedure.query(() => productHelpers.getAllProducts()),
     getById: publicProcedure.input(z.number()).query(({ input }) => productHelpers.getProductById(input)),
     stats: editorProcedure.query(() => productHelpers.getProductStats()),
     create: editorProcedure
