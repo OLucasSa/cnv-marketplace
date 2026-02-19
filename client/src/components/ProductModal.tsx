@@ -39,12 +39,18 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {/* Product Image */}
           <div className="flex flex-col gap-4">
-            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-border">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center">
+              {product.image && product.image.trim() ? (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-muted-foreground">
+                  <p className="text-sm">Imagem não disponível</p>
+                </div>
+              )}
             </div>
             {/* Color Swatches */}
             <div>
