@@ -1,4 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
@@ -17,30 +16,31 @@ import UsersTable from "@/components/UsersTable";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
+const ADMIN_SECRET_KEY = "cnv2024admin"; // Chave secreta - MUDE ISSO!
+
 export default function Admin() {
-  const { user, loading } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | undefined>(undefined);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState<"products" | "users">("products");
   const deleteMutation = trpc.products.delete.useMutation();
 
+  // Verificar URL secreta
   useEffect(() => {
-    if (!loading && (!user || (user.role !== 'admin' && user.role !== 'editor'))) {
-      setLocation('/');
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get("key");
+
+    if (key === ADMIN_SECRET_KEY) {
+      setIsAuthorized(true);
+    } else {
+      // Redirecionar para home se chave inválida
+      setLocation("/");
     }
-  }, [user, loading, setLocation]);
+  }, [setLocation]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
-      </div>
-    );
-  }
-
-  if (!user || (user.role !== 'admin' && user.role !== 'editor')) {
+  if (!isAuthorized) {
     return null;
   }
 
@@ -106,19 +106,17 @@ export default function Admin() {
           >
             Produtos
           </button>
-          {user.role === "admin" && (
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`px-4 py-2 font-semibold transition-colors flex items-center gap-2 ${
-                activeTab === "users"
-                  ? "border-b-2 border-accent text-accent"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              Usuários
-            </button>
-          )}
+          <button
+            onClick={() => setActiveTab("users")}
+            className={`px-4 py-2 font-semibold transition-colors flex items-center gap-2 ${
+              activeTab === "users"
+                ? "border-b-2 border-accent text-accent"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Users className="h-4 w-4" />
+            Usuários
+          </button>
         </div>
 
         {/* Products Tab */}
@@ -138,8 +136,8 @@ export default function Admin() {
           </>
         )}
 
-        {/* Users Tab - Admin only */}
-        {activeTab === "users" && user.role === "admin" && (
+        {/* Users Tab */}
+        {activeTab === "users" && (
           <div>
             <h2 className="text-xl font-bold heading mb-4">Todos os Usuários</h2>
             <UsersTable />

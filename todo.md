@@ -79,3 +79,14 @@
 - [x] Testar acesso Editor (6 testes passando)
 - [x] Testar permissões negadas (6 testes passando)
 - [x] Criar checkpoint final
+
+
+## Remover Autenticação OAuth - Acesso via URL Secreta
+
+- [ ] Remover OAuth do projeto
+- [ ] Remover página de Login
+- [ ] Remover sistema de roles (admin/editor)
+- [ ] Criar rota secreta para dashboard
+- [ ] Remover links públicos para admin
+- [ ] Testar acesso via URL secreta
+- [ ] Criar checkpoint final
