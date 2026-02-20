@@ -90,3 +90,40 @@
 - [ ] Remover links públicos para admin
 - [ ] Testar acesso via URL secreta
 - [ ] Criar checkpoint final
+
+
+## Sistema Multi-Imagens por Produto
+
+### Fase 1: Componentes de Gerenciamento
+- [x] Criar ImageGalleryManager.tsx com interface visual
+- [x] Componente ImageUpload.tsx para upload individual
+- [x] Suporte para adicionar múltiplas imagens
+- [x] Suporte para remover imagens individuais
+- [x] Preview de imagens na galeria
+
+### Fase 2: Armazenamento
+- [x] Implementar pipe-separator (|) para múltiplas URLs
+- [x] Compatibilidade com campo imageUrl existente
+- [x] Sem mudanças no schema do banco de dados
+- [x] Parsing robusto de URLs separadas por pipe
+
+### Fase 3: Exibição Pública
+- [x] Criar ImageCarousel.tsx para catálogo público
+- [x] Navegação entre imagens (anterior/próxima)
+- [x] Indicadores de imagem ativa
+- [x] Fallback para "Sem imagem"
+- [x] Responsivo em mobile
+
+### Fase 4: Integração Admin
+- [x] Integrar ImageGalleryManager no ProductForm
+- [x] Exibir galeria ao criar novo produto
+- [x] Exibir galeria ao editar produto
+- [x] Salvar múltiplas imagens ao criar/atualizar
+- [x] Carregar imagens existentes ao editar
+
+### Fase 5: Testes e Validação
+- [x] Testar upload de múltiplas imagens
+- [x] Testar remoção individual de imagens
+- [x] Testar carousel na página pública
+- [x] Testar compatibilidade com produtos existentes
+- [x] Testar fallback quando sem imagens

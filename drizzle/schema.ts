@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, tinyint } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -76,3 +76,20 @@ export const productColors = mysqlTable("productColors", {
 
 export type ProductColor = typeof productColors.$inferSelect;
 export type InsertProductColor = typeof productColors.$inferInsert;
+
+/**
+ * Product images table for storing multiple images per product
+ */
+export const productImages = mysqlTable("productImages", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull(),
+  imageUrl: text("imageUrl").notNull(),
+  imageKey: varchar("imageKey", { length: 255 }).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isMain: tinyint("isMain").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProductImage = typeof productImages.$inferSelect;
+export type InsertProductImage = typeof productImages.$inferInsert;

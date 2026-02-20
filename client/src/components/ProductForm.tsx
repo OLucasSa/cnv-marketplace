@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ImageUpload from "./ImageUpload";
 import ColorSelector from "./ColorSelector";
+import ImageGalleryManager from "./ImageGalleryManager";
 
 interface ProductFormProps {
   productId?: number;
@@ -175,7 +176,6 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <ImageUpload
           onImageUpload={(url, key) => setFormData({ ...formData, imageUrl: url })}
@@ -183,18 +183,24 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         />
       </div>
 
-        <div>
-          <Label htmlFor="status">Status</Label>
-          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value as "active" | "inactive" })}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Ativo</SelectItem>
-              <SelectItem value="inactive">Inativo</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <Label htmlFor="status">Status</Label>
+        <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value as "active" | "inactive" })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Ativo</SelectItem>
+            <SelectItem value="inactive">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="col-span-full">
+        <ImageGalleryManager
+          imageString={formData.imageUrl}
+          onImagesChange={(imageString) => setFormData({ ...formData, imageUrl: imageString })}
+        />
       </div>
 
       <div>
