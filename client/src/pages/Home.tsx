@@ -167,6 +167,7 @@ export default function Home() {
                     category: product.category,
                     price: product.price,
                     image: product.imageUrl || '',
+                    imageUrl: product.imageUrl || '',
                     description: product.description || '',
                     colors: [],
                     sizes: [],

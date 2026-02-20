@@ -4,15 +4,36 @@ import { Button } from '@/components/ui/button';
 import { ChevronRight, Image as ImageIcon } from 'lucide-react';
 
 interface ProductCardProps {
-  product: Product;
-  onViewDetails: (product: Product) => void;
+  product: any;
+  onViewDetails: (product: any) => void;
 }
 
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f3f4f6" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="16" fill="%239ca3af" text-anchor="middle" dominant-baseline="middle"%3EImagem não disponível%3C/text%3E%3C/svg%3E';
 
 export default function ProductCard({ product, onViewDetails }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const imageUrl = product.image && product.image.trim() ? product.image : null;
+  
+  // Extrair primeira imagem do imageUrl (pipe-separated)
+  let firstImage: string | null = null;
+  if (product.imageUrl && typeof product.imageUrl === 'string') {
+    const images = product.imageUrl.split('|').map((url: string) => url.trim()).filter((url: string) => url.length > 0);
+    firstImage = images.length > 0 ? images[0] : null;
+  }
+  
+  // Fallback para product.image se existir
+  const imageUrl = firstImage || (product.image && product.image.trim() ? product.image : null);
+
+  // Parse colors com fallback
+  const colors = Array.isArray(product.colors) 
+    ? product.colors 
+    : (typeof product.colors === 'string' 
+        ? JSON.parse(product.colors).catch(() => []) 
+        : []);
+
+  // Parse specifications com fallback
+  const specifications = typeof product.specifications === 'string'
+    ? JSON.parse(product.specifications)
+    : product.specifications || { material: 'Personalizado' };
 
   return (
     <div
@@ -27,6 +48,9 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
             src={imageUrl}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE;
+            }}
           />
         ) : (
           <div className="flex flex-col items-center justify-center text-muted-foreground">
@@ -35,10 +59,10 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
           </div>
         )}
         {/* Overlay com cores disponíveis */}
-        {isHovered && (
+        {isHovered && colors.length > 0 && (
           <div className="absolute inset-0 bg-black/40 flex items-end p-4 transition-opacity duration-300">
             <div className="flex gap-2 flex-wrap">
-              {product.colors.slice(0, 4).map((color) => (
+              {colors.slice(0, 4).map((color: any) => (
                 <div
                   key={color.hex}
                   className="w-6 h-6 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-transform"
@@ -46,9 +70,9 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
                   title={color.name}
                 />
               ))}
-              {product.colors.length > 4 && (
+              {colors.length > 4 && (
                 <div className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center bg-gray-600 text-white text-xs font-bold">
-                  +{product.colors.length - 4}
+                  +{colors.length - 4}
                 </div>
               )}
             </div>
@@ -69,15 +93,15 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         {/* Specifications Preview */}
         <div className="mb-4 space-y-1">
           <p className="text-xs text-muted-foreground">
-            <span className="font-semibold">Material:</span> {product.specifications.material}
+            <span className="font-semibold">Material:</span> {specifications.material || 'Personalizado'}
           </p>
-          {product.specifications.capacity && (
+          {specifications.capacity && (
             <p className="text-xs text-muted-foreground">
-              <span className="font-semibold">Capacidade:</span> {product.specifications.capacity}
+              <span className="font-semibold">Capacidade:</span> {specifications.capacity}
             </p>
           )}
           <p className="text-xs text-muted-foreground">
-            <span className="font-semibold">Cores:</span> {product.colors.length} disponíveis
+            <span className="font-semibold">Cores:</span> {colors.length} disponíveis
           </p>
         </div>
         {/* CTA Button */}
