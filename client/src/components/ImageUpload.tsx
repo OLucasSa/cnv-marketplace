@@ -82,6 +82,13 @@ export default function ImageUpload({ onImageUpload, currentImageUrl }: ImageUpl
     setFile(null);
   };
 
+  const handleSelectClick = () => {
+    const input = document.getElementById("image-input") as HTMLInputElement;
+    if (input) {
+      input.click();
+    }
+  };
+
   return (
     <div className="space-y-4">
       <Label>Imagem do Produto</Label>
@@ -113,19 +120,17 @@ export default function ImageUpload({ onImageUpload, currentImageUrl }: ImageUpl
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="hidden"
             id="image-input"
+            className="hidden"
           />
-          <label htmlFor="image-input">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => document.getElementById("image-input")?.click()}
-            >
-              Selecionar Imagem
-            </Button>
-          </label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleSelectClick}
+          >
+            Selecionar Imagem
+          </Button>
         </div>
       )}
 
