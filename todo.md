@@ -213,11 +213,17 @@
 
 
 ## Implementação de Imagem Personalizável no Banner (Em Progresso)
-- [ ] Remover texto "C.N.V. Gravação a Laser Premium" do banner
-- [ ] Criar espaço para imagem PNG na frente dos quadrados amarelos
-- [ ] Implementar sistema de upload com drag & drop
-- [ ] Criar tabela no banco para armazenar URL da imagem do banner
-- [ ] Criar aba de gerenciamento no dashboard
-- [ ] Permitir substituição de imagem
+- [x] Remover texto "C.N.V. Gravação a Laser Premium" do banner
+- [x] Criar espaço para imagem PNG na frente dos quadrados amarelos
+- [x] Implementar sistema de upload com drag & drop
+- [x] Criar aba de gerenciamento no dashboard
+- [x] Permitir substituição de imagem
 - [ ] Testar upload e exibição no banner
 - [ ] Validar responsividade em mobile e desktop
+
+## Correção de Bugs Críticos (Em Progresso)
+- [ ] Imagem do banner não aparece no marketplace após upload
+- [ ] Erro ao editar informações dos produtos
+- [ ] Verificar salvamento de URL do banner em localStorage
+- [ ] Verificar função de update de produtos
+- [ ] Revisar conflito entre novos campos adicionados

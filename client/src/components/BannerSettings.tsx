@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Upload, X, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/lib/trpc';
@@ -8,6 +8,7 @@ export default function BannerSettings() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Carregar imagem atual do localStorage
   useEffect(() => {
@@ -41,10 +42,13 @@ export default function BannerSettings() {
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
   }, []);
 
-  const handleDragLeave = useCallback(() => {
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
   }, []);
 
@@ -90,6 +94,7 @@ export default function BannerSettings() {
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
 
     const files = e.dataTransfer.files;
@@ -112,6 +117,10 @@ export default function BannerSettings() {
     window.location.reload();
   };
 
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -123,25 +132,28 @@ export default function BannerSettings() {
         </p>
       </div>
 
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".png,image/png"
+        onChange={handleFileInput}
+        disabled={uploadMutation.isPending}
+        className="hidden"
+      />
+
       {/* Upload Area */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        onClick={triggerFileInput}
+        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
           isDragging
             ? 'border-accent bg-accent/10'
             : 'border-border bg-secondary/50 hover:border-accent'
-        } ${uploadMutation.isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        } ${uploadMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        <input
-          type="file"
-          accept=".png,image/png"
-          onChange={handleFileInput}
-          disabled={uploadMutation.isPending}
-          className="absolute inset-0 opacity-0 cursor-pointer"
-        />
-
         <div className="flex flex-col items-center gap-3">
           <Upload className="w-8 h-8 text-muted-foreground" />
           <div>
