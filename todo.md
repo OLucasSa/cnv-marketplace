@@ -172,3 +172,12 @@
 - [x] Reorganizar informações no modal (imagens, cores, preço, estoque)
 - [x] Melhorar navegação e usabilidade do modal
 - [x] Testar paginação e novo layout
+
+
+## Reformulação do ProductModal - Informações Editáveis
+- [x] Mostrar cores (bolinhas) ao passar mouse nos produtos
+- [x] Mostrar cores (bolinhas) na janela "Ver Detalhes"
+- [x] Remover informações não editáveis (Especificações, Características, Tamanhos)
+- [x] Exibir apenas Nome, Categoria, Preço, Descrição, Cores
+- [x] Melhorar layout e organização
+- [x] Testar alterações
