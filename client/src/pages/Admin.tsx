@@ -1,8 +1,7 @@
-import DashboardLayout from "@/components/DashboardLayout";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Users } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import ProductsTable from "@/components/ProductsTable";
 import ProductForm from "@/components/ProductForm";
-import DashboardMetrics from "@/components/DashboardMetrics";
-import UsersTable from "@/components/UsersTable";
+import IconUpload from "@/components/IconUpload";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -24,13 +22,12 @@ export default function Admin() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | undefined>(undefined);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [activeTab, setActiveTab] = useState<"products" | "users">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "icon">("products");
   const utils = trpc.useUtils();
   const deleteMutation = trpc.products.delete.useMutation({
     onSuccess: () => {
       utils.products.all.invalidate();
       utils.products.list.invalidate();
-      utils.products.stats.invalidate();
     },
   });
 
@@ -78,30 +75,35 @@ export default function Admin() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-border">
+        <div className="container py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold heading">
-              {activeTab === "products" ? "Gerenciamento de Produtos" : "Gerenciar Usuários"}
+            <h1 className="text-2xl font-bold heading">
+              {activeTab === "products" ? "Gerenciamento de Produtos" : "Configurar Ícone do Sistema"}
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-1">
               {activeTab === "products" 
                 ? "Controle total sobre seu catálogo de produtos" 
-                : "Gerencie roles e permissões dos usuários"}
+                : "Altere o ícone/logo que aparece no marketplace"}
             </p>
           </div>
-          {activeTab === "products" && (
-            <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Produto
-            </Button>
-          )}
+          <Button 
+            onClick={() => setLocation("/")} 
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para página principal
+          </Button>
         </div>
+      </header>
 
+      {/* Main Content */}
+      <div className="container py-8">
         {/* Tabs */}
-        <div className="flex gap-2 border-b border-border">
+        <div className="flex gap-4 border-b border-border mb-8">
           <button
             onClick={() => setActiveTab("products")}
             className={`px-4 py-2 font-semibold transition-colors ${
@@ -113,40 +115,39 @@ export default function Admin() {
             Produtos
           </button>
           <button
-            onClick={() => setActiveTab("users")}
-            className={`px-4 py-2 font-semibold transition-colors flex items-center gap-2 ${
-              activeTab === "users"
+            onClick={() => setActiveTab("icon")}
+            className={`px-4 py-2 font-semibold transition-colors ${
+              activeTab === "icon"
                 ? "border-b-2 border-accent text-accent"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Users className="h-4 w-4" />
-            Usuários
+            Ícone do Sistema
           </button>
         </div>
 
         {/* Products Tab */}
         {activeTab === "products" && (
-          <>
-            {/* Metrics */}
-            <DashboardMetrics />
-            {/* Products Table */}
-            <div>
-              <h2 className="text-xl font-bold heading mb-4">Todos os Produtos</h2>
-              <ProductsTable
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                refreshTrigger={refreshTrigger}
-              />
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold heading">Todos os Produtos</h2>
+              <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Produto
+              </Button>
             </div>
-          </>
+            <ProductsTable
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              refreshTrigger={refreshTrigger}
+            />
+          </div>
         )}
 
-        {/* Users Tab */}
-        {activeTab === "users" && (
+        {/* Icon Tab */}
+        {activeTab === "icon" && (
           <div>
-            <h2 className="text-xl font-bold heading mb-4">Todos os Usuários</h2>
-            <UsersTable />
+            <IconUpload />
           </div>
         )}
 
@@ -166,6 +167,6 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }

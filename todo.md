@@ -153,3 +153,14 @@
 - [x] Corrigir erro NotFoundError no ImageCarousel (memoization e validação)
 - [x] Testar com múltiplas imagens
 - [x] Validar que dashboard não trava (removido useMemo problemático)
+
+
+## Simplificação do Dashboard Admin
+- [x] Remover navegação lateral
+- [x] Manter apenas botão "Voltar para página principal"
+- [x] Remover aba "Usuários"
+- [x] Remover painel de estatísticas (Total, Ativos, Sem Estoque)
+- [x] Criar aba para alterar ícone/logo do sistema
+- [x] Implementar upload de ícone (PNG/JPG)
+- [x] Corrigir texto "Núcleos" para "Cores" no marketplace
+- [x] Testar todas as mudanças
