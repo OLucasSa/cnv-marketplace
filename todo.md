@@ -184,3 +184,12 @@
 - [x] Testar atualização de cores sem crashes
 - [x] Validar consistência entre dashboard e marketplace
 - [x] Adicionar logs de debug ao ColorSelector (removidos após testes)
+
+
+## Otimização do Layout do Modal de Detalhes (Concluído)
+- [x] Refatorar ProductModal.tsx para layout horizontal na versão desktop
+- [x] Reorganizar seções (imagens, preço, cores, especificações)
+- [x] Melhorar distribuição de espaço em telas grandes
+- [x] Manter layout vertical responsivo para mobile
+- [x] Testar em diferentes resoluções de desktop
+- [x] Validar visibilidade de todas as informações sem rolagem excessiva
