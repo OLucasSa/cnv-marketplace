@@ -1,7 +1,7 @@
 import { Product } from '@/lib/products';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, Check } from 'lucide-react';
+import { X, Check, ShoppingCart, Info } from 'lucide-react';
 import { useState } from 'react';
 import ImageCarousel from './ImageCarousel';
 
@@ -17,7 +17,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
   if (!product) return null;
 
-  // Parse images directly without useMemo
+  // Parse images
   const images = product.imageUrl
     ? product.imageUrl
         .split('|')
@@ -29,10 +29,11 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-row items-start justify-between">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto p-0">
+        {/* Header */}
+        <div className="sticky top-0 z-50 bg-white border-b border-border p-6 flex items-start justify-between">
           <div className="flex-1">
-            <DialogTitle className="text-3xl font-bold heading mb-2">
+            <DialogTitle className="text-4xl font-bold heading mb-2">
               {product.name}
             </DialogTitle>
             <p className="text-sm text-accent uppercase tracking-wider font-semibold">
@@ -41,140 +42,183 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-2 hover:bg-secondary/20 transition-colors"
+            className="rounded-full p-2 hover:bg-secondary/20 transition-colors flex-shrink-0"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
-        </DialogHeader>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-          {/* Product Image Carousel */}
-          <div className="flex flex-col gap-4">
-            <ImageCarousel images={images} productName={product.name} />
-            
-            {/* Color Swatches */}
-            <div>
-              <p className="text-sm font-semibold mb-3 heading">Cores Disponíveis</p>
-              <div className="grid grid-cols-4 gap-3">
-                {product.colors.map((color) => (
-                  <button
-                    key={color.hex}
-                    onClick={() => setSelectedColor(color.hex)}
-                    className={`relative group transition-all duration-300 ${
-                      selectedColor === color.hex ? 'ring-2 ring-accent ring-offset-2' : ''
-                    }`}
-                  >
-                    <div
-                      className="w-full aspect-square rounded-lg border-2 transition-all hover:scale-110"
-                      style={{
-                        backgroundColor: color.hex,
-                        borderColor: selectedColor === color.hex ? '#FFD700' : '#E0E0E0',
-                      }}
-                    />
-                    <p className="text-xs text-center mt-2 font-medium text-foreground">
-                      {color.name}
-                    </p>
-                    {selectedColor === color.hex && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Check className="w-5 h-5 text-accent" />
-                      </div>
-                    )}
-                  </button>
-                ))}
+        {/* Main Content */}
+        <div className="p-6 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Images */}
+            <div className="lg:col-span-2">
+              <div className="bg-secondary/5 rounded-lg p-6">
+                <ImageCarousel images={images} productName={product.name} />
+              </div>
+            </div>
+
+            {/* Right Column - Quick Info */}
+            <div className="space-y-6">
+              {/* Price */}
+              <div className="bg-accent/10 border-2 border-accent rounded-lg p-6 space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Preço</p>
+                  <p className="text-3xl font-bold text-accent">
+                    {typeof product.price === 'string' ? product.price : `R$ ${product.price}`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-secondary/5 rounded-lg p-6">
+                <p className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Info className="w-4 h-4 text-accent" />
+                  Descrição
+                </p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {product.description}
+                </p>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="space-y-3">
+                <Button
+                  onClick={() => {
+                    const message = `Olá! Tenho interesse no produto: ${product.name}${
+                      selectedColor ? ` na cor ${selectedColor}` : ''
+                    }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
+                    const whatsappUrl = `https://wa.me/5566996066814?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                  }}
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-base py-6 font-bold flex items-center justify-center gap-2"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  Solicitar Orçamento
+                </Button>
+                <Button
+                  onClick={onClose}
+                  variant="outline"
+                  className="w-full py-6"
+                >
+                  Fechar
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* Product Details */}
-          <div className="flex flex-col gap-6">
+          {/* Bottom Section - Colors, Sizes, Specs */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t border-border pt-8">
+            {/* Colors */}
             <div>
-              <p className="text-sm text-muted-foreground mb-2">Descrição</p>
-              <p className="text-base text-foreground leading-relaxed">
-                {product.description}
+              <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent rounded-full" />
+                Cores Disponíveis
               </p>
-            </div>
-
-            {/* Specifications */}
-            <div className="border-t border-border pt-6">
-              <p className="text-lg font-bold heading mb-4">Especificações</p>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="font-semibold text-foreground">Material:</span>
-                  <span className="text-muted-foreground">{product.specifications.material}</span>
-                </div>
-                {product.specifications.capacity && (
-                  <div className="flex justify-between">
-                    <span className="font-semibold text-foreground">Capacidade:</span>
-                    <span className="text-muted-foreground">{product.specifications.capacity}</span>
-                  </div>
-                )}
-                {product.specifications.dimensions && (
-                  <div className="flex justify-between">
-                    <span className="font-semibold text-foreground">Dimensões:</span>
-                    <span className="text-muted-foreground">{product.specifications.dimensions}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Features */}
-            <div className="border-t border-border pt-6">
-              <p className="text-lg font-bold heading mb-4">Características</p>
-              <ul className="space-y-2">
-                {product.specifications.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0" />
-                    <span className="text-sm text-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Sizes */}
-            {hasSizes && (
-              <div className="border-t border-border pt-6">
-                <p className="text-lg font-bold heading mb-4">Tamanhos</p>
-                <div className="flex gap-3">
-                  {product.sizes!.map((size) => (
+              <div className="grid grid-cols-4 gap-4">
+                {product.colors && product.colors.length > 0 ? (
+                  product.colors.map((color) => (
                     <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all font-semibold ${
-                        selectedSize === size
-                          ? 'bg-accent text-accent-foreground border-accent'
-                          : 'border-border hover:border-accent text-foreground'
+                      key={color.hex}
+                      onClick={() => setSelectedColor(color.hex)}
+                      className={`flex flex-col items-center gap-2 transition-all duration-300 ${
+                        selectedColor === color.hex ? 'opacity-100' : 'opacity-70 hover:opacity-100'
                       }`}
                     >
-                      {size}
+                      <div
+                        className={`w-16 h-16 rounded-lg border-4 transition-all ${
+                          selectedColor === color.hex
+                            ? 'border-accent shadow-lg scale-110'
+                            : 'border-border hover:border-accent'
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                      />
+                      <p className="text-xs text-center font-medium text-foreground line-clamp-2">
+                        {color.name}
+                      </p>
+                      {selectedColor === color.hex && (
+                        <Check className="w-4 h-4 text-accent absolute" />
+                      )}
                     </button>
-                  ))}
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground col-span-4">Sem cores definidas</p>
+                )}
+              </div>
+            </div>
+
+            {/* Sizes & Specs */}
+            <div className="space-y-6">
+              {/* Sizes */}
+              {hasSizes && (
+                <div>
+                  <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-accent rounded-full" />
+                    Tamanhos
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {product.sizes!.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-6 py-3 rounded-lg border-2 transition-all font-semibold ${
+                          selectedSize === size
+                            ? 'bg-accent text-accent-foreground border-accent'
+                            : 'border-border hover:border-accent text-foreground'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Specifications */}
+              <div>
+                <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-accent rounded-full" />
+                  Especificações
+                </p>
+                <div className="space-y-3 bg-secondary/5 rounded-lg p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-foreground">Material:</span>
+                    <span className="text-muted-foreground">{product.specifications.material}</span>
+                  </div>
+                  {product.specifications.capacity && (
+                    <div className="flex justify-between items-center border-t border-border pt-3">
+                      <span className="font-semibold text-foreground">Capacidade:</span>
+                      <span className="text-muted-foreground">{product.specifications.capacity}</span>
+                    </div>
+                  )}
+                  {product.specifications.dimensions && (
+                    <div className="flex justify-between items-center border-t border-border pt-3">
+                      <span className="font-semibold text-foreground">Dimensões:</span>
+                      <span className="text-muted-foreground">{product.specifications.dimensions}</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
-
-            {/* CTA */}
-            <div className="border-t border-border pt-6 flex gap-3">
-              <Button
-                onClick={() => {
-                  const message = `Olá! Tenho interesse no produto: ${product.name}${
-                    selectedColor ? ` na cor ${selectedColor}` : ''
-                  }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
-                  const whatsappUrl = `https://wa.me/5566996066814?text=${encodeURIComponent(message)}`;
-                  window.open(whatsappUrl, '_blank');
-                }}
-                className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 text-base py-6 font-bold"
-              >
-                Solicitar Orçamento
-              </Button>
-              <Button
-                onClick={onClose}
-                variant="outline"
-                className="px-6"
-              >
-                Fechar
-              </Button>
             </div>
           </div>
+
+          {/* Features */}
+          {product.specifications.features && product.specifications.features.length > 0 && (
+            <div className="border-t border-border pt-8">
+              <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent rounded-full" />
+                Características
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {product.specifications.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3 bg-secondary/5 rounded-lg p-4">
+                    <div className="w-2 h-2 rounded-full bg-accent mt-2 flex-shrink-0" />
+                    <span className="text-sm text-foreground">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

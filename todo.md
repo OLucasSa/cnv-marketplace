@@ -164,3 +164,11 @@
 - [x] Implementar upload de ícone (PNG/JPG)
 - [x] Corrigir texto "Núcleos" para "Cores" no marketplace
 - [x] Testar todas as mudanças
+
+
+## Melhoria de Navegação e Usabilidade
+- [x] Adicionar paginação na listagem de produtos do dashboard
+- [x] Reformular layout do ProductModal com tamanho maior
+- [x] Reorganizar informações no modal (imagens, cores, preço, estoque)
+- [x] Melhorar navegação e usabilidade do modal
+- [x] Testar paginação e novo layout
