@@ -158,6 +158,15 @@ export default function Home() {
             <TabsContent value={selectedCategory} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product, idx) => {
+                  const parseJSON = (str: string | null | undefined) => {
+                    try {
+                      return str && str.trim() ? JSON.parse(str) : [];
+                    } catch (e) {
+                      console.error('Error parsing JSON:', e);
+                      return [];
+                    }
+                  };
+
                   const productData = {
                     id: String(product.id),
                     name: product.name,
@@ -165,8 +174,8 @@ export default function Home() {
                     price: product.price,
                     image: product.imageUrl || '',
                     description: product.description || '',
-                    colors: product.colors ? JSON.parse(product.colors) : [],
-                    sizes: product.sizes ? JSON.parse(product.sizes) : [],
+                    colors: parseJSON(product.colors),
+                    sizes: parseJSON(product.sizes),
                     specifications: {
                       material: 'Personalizado',
                       features: product.features ? product.features.split(',') : [],
