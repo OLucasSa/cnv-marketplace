@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import ImageUpload from "./ImageUpload";
 import ColorSelector from "./ColorSelector";
 import ImageGalleryManager from "./ImageGalleryManager";
 
@@ -111,7 +110,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 max-h-[85vh] overflow-y-auto pr-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="name">Nome do Produto *</Label>
@@ -177,13 +176,6 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
       </div>
 
       <div>
-        <ImageUpload
-          onImageUpload={(url, key) => setFormData({ ...formData, imageUrl: url })}
-          currentImageUrl={formData.imageUrl}
-        />
-      </div>
-
-      <div>
         <Label htmlFor="status">Status</Label>
         <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value as "active" | "inactive" })}>
           <SelectTrigger>
@@ -210,7 +202,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         />
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end sticky bottom-0 bg-white pt-4 border-t">
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>

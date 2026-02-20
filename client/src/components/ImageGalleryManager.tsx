@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
@@ -13,64 +13,97 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
   const [isUploading, setIsUploading] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadMutation = trpc.upload.image.useMutation();
 
   // Parse images from string (separated by |)
   const images = imageString ? imageString.split('|').filter(url => url.trim()) : [];
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('A imagem deve ter no máximo 5MB');
+      return;
+    }
+
     setIsUploading(true);
+
     try {
       const reader = new FileReader();
+      
       reader.onload = async () => {
-        const base64 = reader.result as string;
-        const base64Data = base64.split(',')[1];
+        try {
+          const base64 = reader.result as string;
+          const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
 
-        const result = await uploadMutation.mutateAsync({
-          base64: base64Data,
-          fileName: file.name,
-        });
+          const result = await uploadMutation.mutateAsync({
+            base64: base64Data,
+            fileName: file.name,
+          });
 
-        if (result.url) {
-          const newImages = [...images, result.url];
-          const newImageString = newImages.join('|');
-          onImagesChange(newImageString);
-          toast.success('Imagem adicionada com sucesso!');
+          if (result.url) {
+            const newImages = [...images, result.url];
+            const newImageString = newImages.join('|');
+            onImagesChange(newImageString);
+            toast.success('Imagem adicionada com sucesso!');
+            
+            // Reset file input
+            if (fileInputRef.current) {
+              fileInputRef.current.value = '';
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao fazer upload:', error);
+          toast.error('Erro ao fazer upload da imagem');
+        } finally {
+          setIsUploading(false);
         }
+      };
+
+      reader.onerror = () => {
+        console.error('Erro ao ler arquivo');
+        toast.error('Erro ao ler arquivo');
         setIsUploading(false);
       };
+
       reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Erro ao fazer upload:', error);
-      toast.error('Erro ao fazer upload da imagem');
+      console.error('Erro ao processar imagem:', error);
+      toast.error('Erro ao processar imagem');
       setIsUploading(false);
     }
-  };
+  }, [images, onImagesChange, uploadMutation]);
 
-  const removeImage = (index: number) => {
+  const removeImage = useCallback((index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     const newImageString = newImages.join('|');
     onImagesChange(newImageString);
     toast.success('Imagem removida');
-  };
+  }, [images, onImagesChange]);
 
-  const handleDragStart = (index: number) => {
+  const handleDragStart = useCallback((index: number) => {
     setDraggedIndex(index);
-  };
+  }, []);
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>, index: number) => {
     e.preventDefault();
     setDragOverIndex(index);
-  };
+  }, []);
 
-  const handleDragLeave = () => {
+  const handleDragLeave = useCallback(() => {
     setDragOverIndex(null);
-  };
+  }, []);
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
     e.preventDefault();
     setDragOverIndex(null);
 
@@ -89,12 +122,16 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
     onImagesChange(newImageString);
     setDraggedIndex(null);
     toast.success('Imagens reordenadas com sucesso!');
-  };
+  }, [draggedIndex, images, onImagesChange]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setDraggedIndex(null);
     setDragOverIndex(null);
-  };
+  }, []);
+
+  const handleAddImageClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -104,14 +141,14 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => document.getElementById('gallery-input')?.click()}
+          onClick={handleAddImageClick}
           disabled={isUploading}
         >
           <Plus className="h-4 w-4 mr-2" />
           {isUploading ? 'Enviando...' : 'Adicionar Imagem'}
         </Button>
         <input
-          id="gallery-input"
+          ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleFileSelect}
@@ -124,7 +161,7 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
         {images.length > 0 ? (
           images.map((image, index) => (
             <div
-              key={index}
+              key={`${image}-${index}`}
               draggable
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOver(e, index)}

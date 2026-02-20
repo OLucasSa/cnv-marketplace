@@ -135,3 +135,12 @@
 - [x] Reordenar array de imagens ao soltar
 - [x] Testar em desktop e mobile
 - [x] Criar checkpoint final
+
+
+## Correções e Melhorias Solicitadas
+- [x] Remover campo "Imagem do Produto" (ImageUpload)
+- [x] Consolidar tudo em "Galeria de Imagens" (ImageGalleryManager)
+- [x] Corrigir erro NotFoundError no upload de imagens
+- [x] Adicionar scroll vertical no modal do formulário
+- [x] Testar upload, salvamento e atualização de imagens
+- [x] Validar acesso aos botões de ação

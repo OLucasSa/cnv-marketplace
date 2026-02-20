@@ -152,7 +152,7 @@ export default function Admin() {
 
         {/* Product Form Dialog */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? "Editar Produto" : "Novo Produto"}
