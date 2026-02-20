@@ -8,14 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 
-const parseJSON = (str: string | null | undefined) => {
+const parseJSON = (str: string | null | undefined): any[] => {
   try {
-    if (!str || typeof str !== 'string') return [];
+    if (str === null || str === undefined || typeof str !== 'string') return [];
     const trimmed = str.trim();
     if (!trimmed || trimmed === '{}' || trimmed === '[]') return [];
-    return JSON.parse(trimmed);
+    if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) return [];
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
-    console.error('Error parsing JSON:', e);
+    console.error('Error parsing JSON:', str, e);
     return [];
   }
 };
