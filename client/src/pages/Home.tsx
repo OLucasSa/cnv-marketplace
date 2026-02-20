@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { categories } from '@/lib/products';
 import type { Product } from '@/lib/products';
@@ -8,6 +8,32 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 import ColorBadges from '@/components/ColorBadges';
+
+// Componente para exibir imagem do banner
+function BannerImageDisplay() {
+  const [bannerImage, setBannerImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('bannerImageUrl');
+    if (stored) {
+      setBannerImage(stored);
+    }
+  }, []);
+
+  if (bannerImage) {
+    return (
+      <img
+        src={bannerImage}
+        alt="Banner personalizado"
+        className="max-w-full max-h-full object-contain"
+      />
+    );
+  }
+
+  return (
+    <p className="text-white/40 text-center text-sm">Nenhuma imagem configurada</p>
+  );
+}
 
 
 
@@ -100,14 +126,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right Decorative Element */}
+          {/* Right Decorative Element with Banner Image */}
           <div className="relative h-96 hidden md:block">
             <div className="absolute inset-0 bg-accent/20 rounded-3xl transform rotate-6" />
-            <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-6xl font-bold text-white/20 heading">C.N.V</p>
-                <p className="text-white/30 mt-4 text-lg">Gravação a Laser Premium</p>
-              </div>
+            <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center overflow-hidden">
+              <BannerImageDisplay />
             </div>
           </div>
         </div>

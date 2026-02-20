@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowLeft } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import ProductsTable from "@/components/ProductsTable";
 import ProductForm from "@/components/ProductForm";
+import BannerSettings from "@/components/BannerSettings";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -98,21 +100,37 @@ export default function Admin() {
 
       {/* Main Content */}
       <div className="container py-8">
-        {/* Products Section */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold heading">Todos os Produtos</h2>
-            <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Produto
-            </Button>
-          </div>
-          <ProductsTable
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            refreshTrigger={refreshTrigger}
-          />
-        </div>
+        <Tabs defaultValue="produtos" className="w-full">
+          <TabsList className="bg-secondary/10 border border-border mb-6">
+            <TabsTrigger value="produtos" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              Produtos
+            </TabsTrigger>
+            <TabsTrigger value="banner" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              Banner
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Products Tab */}
+          <TabsContent value="produtos" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold heading">Todos os Produtos</h2>
+              <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Produto
+              </Button>
+            </div>
+            <ProductsTable
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              refreshTrigger={refreshTrigger}
+            />
+          </TabsContent>
+
+          {/* Banner Tab */}
+          <TabsContent value="banner" className="space-y-6">
+            <BannerSettings />
+          </TabsContent>
+        </Tabs>
 
         {/* Product Form Dialog */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

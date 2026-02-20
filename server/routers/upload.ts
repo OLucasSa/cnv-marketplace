@@ -37,4 +37,39 @@ export const uploadRouter = router({
         throw new Error("Falha ao fazer upload da imagem");
       }
     }),
+
+  bannerImage: publicProcedure
+    .input(z.object({
+      base64: z.string(),
+      fileName: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        // Remove data:image/...;base64, prefix if present
+        let base64Data = input.base64;
+        if (base64Data.includes(",")) {
+          base64Data = base64Data.split(",")[1];
+        }
+
+        // Convert base64 to buffer
+        const buffer = Buffer.from(base64Data, "base64");
+
+        // Generate unique file key for banner
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const fileKey = `banner/${timestamp}-${randomId}-${input.fileName}`;
+
+        // Upload to storage
+        const { url, key } = await storagePut(fileKey, buffer, "image/png");
+
+        return {
+          success: true,
+          url,
+          key,
+        };
+      } catch (error) {
+        console.error("Banner upload error:", error);
+        throw new Error("Falha ao fazer upload da imagem do banner");
+      }
+    }),
 });

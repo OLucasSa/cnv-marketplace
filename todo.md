@@ -210,3 +210,14 @@
 - [x] Garantir que paginação funcione corretamente
 - [x] Testar interface simplificada
 - [x] Validar responsividade
+
+
+## Implementação de Imagem Personalizável no Banner (Em Progresso)
+- [ ] Remover texto "C.N.V. Gravação a Laser Premium" do banner
+- [ ] Criar espaço para imagem PNG na frente dos quadrados amarelos
+- [ ] Implementar sistema de upload com drag & drop
+- [ ] Criar tabela no banco para armazenar URL da imagem do banner
+- [ ] Criar aba de gerenciamento no dashboard
+- [ ] Permitir substituição de imagem
+- [ ] Testar upload e exibição no banner
+- [ ] Validar responsividade em mobile e desktop
