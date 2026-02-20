@@ -221,9 +221,9 @@
 - [ ] Testar upload e exibição no banner
 - [ ] Validar responsividade em mobile e desktop
 
-## Correção de Bugs Críticos (Em Progresso)
-- [ ] Imagem do banner não aparece no marketplace após upload
-- [ ] Erro ao editar informações dos produtos
-- [ ] Verificar salvamento de URL do banner em localStorage
-- [ ] Verificar função de update de produtos
-- [ ] Revisar conflito entre novos campos adicionados
+## Correção de Bugs Críticos (Concluído)
+- [x] Imagem do banner não aparece no marketplace após upload (CORRIGIDO)
+- [x] Erro ao editar informações dos produtos (NotFoundError: removeChild) - CORRIGIDO
+- [x] Verificar salvamento de URL do banner em localStorage (FUNCIONANDO)
+- [x] Verificar função de update de produtos (FUNCIONANDO)
+- [x] Revisar conflito entre novos campos adicionados (RESOLVIDO)
