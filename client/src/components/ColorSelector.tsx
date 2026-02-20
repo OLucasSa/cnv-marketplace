@@ -1,4 +1,4 @@
-import { useReducer, useCallback, useMemo } from 'react';
+import { useReducer, useCallback, useMemo, useEffect, useState } from 'react';
 import { COLOR_PALETTE, ColorId, parseColorIds, stringifyColorIds } from "@shared/colors";
 
 interface ColorSelectorProps {
@@ -7,7 +7,9 @@ interface ColorSelectorProps {
   disabled?: boolean;
 }
 
-type ColorAction = { type: 'toggle'; colorId: ColorId };
+type ColorAction = 
+  | { type: 'toggle'; colorId: ColorId }
+  | { type: 'set'; colorIds: ColorId[] };
 
 function colorReducer(selectedIds: ColorId[], action: ColorAction): ColorId[] {
   switch (action.type) {
@@ -19,20 +21,38 @@ function colorReducer(selectedIds: ColorId[], action: ColorAction): ColorId[] {
         return [...selectedIds, colorId];
       }
     }
+    case 'set': {
+      return action.colorIds;
+    }
     default:
       return selectedIds;
   }
 }
 
 export default function ColorSelector({ value, onChange, disabled = false }: ColorSelectorProps) {
-  // Parse initial colors from value
-  const initialColors = useMemo(() => parseColorIds(value), []);
+  // Parse initial colors from value - update when value changes
+  const initialColors = useMemo(() => parseColorIds(value), [value]);
   
   // Use reducer to manage color state locally
   const [selectedIds, dispatch] = useReducer(colorReducer, initialColors);
+  
+  // Track if we're in the middle of updating to avoid infinite loops
+  const [isUpdatingFromParent, setIsUpdatingFromParent] = useState(false);
 
-  // Notify parent of changes - called directly in toggle, not via useEffect
+  // Sync reducer state when value prop changes from parent
+  useEffect(() => {
+    const newColors = parseColorIds(value);
+    // Only update if the colors actually changed
+    if (JSON.stringify(newColors) !== JSON.stringify(selectedIds)) {
+      setIsUpdatingFromParent(true);
+      dispatch({ type: 'set', colorIds: newColors });
+    }
+  }, [value]);
+
+  // Notify parent of changes - called directly, not via useEffect
   const handleToggle = useCallback((colorId: ColorId) => {
+    setIsUpdatingFromParent(false);
+    
     const newIds = selectedIds.includes(colorId)
       ? selectedIds.filter((id) => id !== colorId)
       : [...selectedIds, colorId];
