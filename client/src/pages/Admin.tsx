@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import ProductsTable from "@/components/ProductsTable";
 import ProductForm from "@/components/ProductForm";
-import IconUpload from "@/components/IconUpload";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -22,7 +21,6 @@ export default function Admin() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | undefined>(undefined);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [activeTab, setActiveTab] = useState<"products" | "icon">("products");
   const utils = trpc.useUtils();
   const deleteMutation = trpc.products.delete.useMutation({
     onSuccess: () => {
@@ -81,12 +79,10 @@ export default function Admin() {
         <div className="container py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold heading">
-              {activeTab === "products" ? "Gerenciamento de Produtos" : "Configurar Ícone do Sistema"}
+              Gerenciamento de Produtos
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              {activeTab === "products" 
-                ? "Controle total sobre seu catálogo de produtos" 
-                : "Altere o ícone/logo que aparece no marketplace"}
+              Controle total sobre seu catálogo de produtos
             </p>
           </div>
           <Button 
@@ -102,54 +98,21 @@ export default function Admin() {
 
       {/* Main Content */}
       <div className="container py-8">
-        {/* Tabs */}
-        <div className="flex gap-4 border-b border-border mb-8">
-          <button
-            onClick={() => setActiveTab("products")}
-            className={`px-4 py-2 font-semibold transition-colors ${
-              activeTab === "products"
-                ? "border-b-2 border-accent text-accent"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Produtos
-          </button>
-          <button
-            onClick={() => setActiveTab("icon")}
-            className={`px-4 py-2 font-semibold transition-colors ${
-              activeTab === "icon"
-                ? "border-b-2 border-accent text-accent"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Ícone do Sistema
-          </button>
+        {/* Products Section */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold heading">Todos os Produtos</h2>
+            <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Produto
+            </Button>
+          </div>
+          <ProductsTable
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            refreshTrigger={refreshTrigger}
+          />
         </div>
-
-        {/* Products Tab */}
-        {activeTab === "products" && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold heading">Todos os Produtos</h2>
-              <Button onClick={handleCreateNew} className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Produto
-              </Button>
-            </div>
-            <ProductsTable
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              refreshTrigger={refreshTrigger}
-            />
-          </div>
-        )}
-
-        {/* Icon Tab */}
-        {activeTab === "icon" && (
-          <div>
-            <IconUpload />
-          </div>
-        )}
 
         {/* Product Form Dialog */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
