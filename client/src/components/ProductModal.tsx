@@ -1,7 +1,7 @@
 import { Product } from '@/lib/products';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, ShoppingCart } from 'lucide-react';
+import { X, Check, ShoppingCart, Info } from 'lucide-react';
 import { useState } from 'react';
 import ImageCarousel from './ImageCarousel';
 
@@ -13,6 +13,7 @@ interface ProductModalProps {
 
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   if (!product) return null;
 
@@ -24,13 +25,15 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
         .filter((url: string) => url.length > 0)
     : [];
 
+  const hasSizes = product.sizes && product.sizes.length > 0;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto p-0">
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white border-b border-border p-6 flex items-start justify-between">
           <div className="flex-1">
-            <DialogTitle className="text-3xl font-bold heading mb-2">
+            <DialogTitle className="text-4xl font-bold heading mb-2">
               {product.name}
             </DialogTitle>
             <p className="text-sm text-accent uppercase tracking-wider font-semibold">
@@ -47,25 +50,32 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
         {/* Main Content */}
         <div className="p-6 space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Images */}
-            <div className="bg-secondary/5 rounded-lg p-6">
-              <ImageCarousel images={images} productName={product.name} />
+            <div className="lg:col-span-2">
+              <div className="bg-secondary/5 rounded-lg p-6">
+                <ImageCarousel images={images} productName={product.name} />
+              </div>
             </div>
 
-            {/* Right Column - Info */}
+            {/* Right Column - Quick Info */}
             <div className="space-y-6">
               {/* Price */}
-              <div className="bg-accent/10 border-2 border-accent rounded-lg p-6">
-                <p className="text-sm text-muted-foreground mb-2">Preço</p>
-                <p className="text-3xl font-bold text-accent">
-                  {typeof product.price === 'string' ? product.price : `R$ ${product.price}`}
-                </p>
+              <div className="bg-accent/10 border-2 border-accent rounded-lg p-6 space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Preço</p>
+                  <p className="text-3xl font-bold text-accent">
+                    {typeof product.price === 'string' ? product.price : `R$ ${product.price}`}
+                  </p>
+                </div>
               </div>
 
               {/* Description */}
               <div className="bg-secondary/5 rounded-lg p-6">
-                <p className="text-sm font-semibold text-foreground mb-3">Descrição</p>
+                <p className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Info className="w-4 h-4 text-accent" />
+                  Descrição
+                </p>
                 <p className="text-sm text-foreground leading-relaxed">
                   {product.description}
                 </p>
@@ -77,7 +87,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                   onClick={() => {
                     const message = `Olá! Tenho interesse no produto: ${product.name}${
                       selectedColor ? ` na cor ${selectedColor}` : ''
-                    }. Gostaria de saber mais sobre preços e disponibilidade.`;
+                    }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
                     const whatsappUrl = `https://wa.me/5566996066814?text=${encodeURIComponent(message)}`;
                     window.open(whatsappUrl, '_blank');
                   }}
@@ -97,32 +107,114 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </div>
           </div>
 
-          {/* Colors Section */}
-          {product.colors && product.colors.length > 0 && (
-            <div className="border-t border-border pt-8">
-              <p className="text-lg font-bold heading mb-6">Cores Disponíveis</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {product.colors.map((color) => (
-                  <button
-                    key={color.hex}
-                    onClick={() => setSelectedColor(color.hex)}
-                    className={`flex flex-col items-center gap-3 transition-all duration-300 ${
-                      selectedColor === color.hex ? 'opacity-100' : 'opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-20 h-20 rounded-full border-4 transition-all shadow-md ${
-                        selectedColor === color.hex
-                          ? 'border-accent scale-110'
-                          : 'border-gray-300 hover:border-accent'
+          {/* Bottom Section - Colors, Sizes, Specs */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t border-border pt-8">
+            {/* Colors */}
+            <div>
+              <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent rounded-full" />
+                Cores Disponíveis
+              </p>
+              <div className="grid grid-cols-4 gap-4">
+                {product.colors && product.colors.length > 0 ? (
+                  product.colors.map((color) => (
+                    <button
+                      key={color.hex}
+                      onClick={() => setSelectedColor(color.hex)}
+                      className={`flex flex-col items-center gap-2 transition-all duration-300 ${
+                        selectedColor === color.hex ? 'opacity-100' : 'opacity-70 hover:opacity-100'
                       }`}
-                      style={{ backgroundColor: color.hex }}
-                      title={color.name}
-                    />
-                    <p className="text-xs text-center font-medium text-foreground line-clamp-2 w-20">
-                      {color.name}
-                    </p>
-                  </button>
+                    >
+                      <div
+                        className={`w-16 h-16 rounded-lg border-4 transition-all ${
+                          selectedColor === color.hex
+                            ? 'border-accent shadow-lg scale-110'
+                            : 'border-border hover:border-accent'
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                      />
+                      <p className="text-xs text-center font-medium text-foreground line-clamp-2">
+                        {color.name}
+                      </p>
+                      {selectedColor === color.hex && (
+                        <Check className="w-4 h-4 text-accent absolute" />
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground col-span-4">Sem cores definidas</p>
+                )}
+              </div>
+            </div>
+
+            {/* Sizes & Specs */}
+            <div className="space-y-6">
+              {/* Sizes */}
+              {hasSizes && (
+                <div>
+                  <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-accent rounded-full" />
+                    Tamanhos
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {product.sizes!.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-6 py-3 rounded-lg border-2 transition-all font-semibold ${
+                          selectedSize === size
+                            ? 'bg-accent text-accent-foreground border-accent'
+                            : 'border-border hover:border-accent text-foreground'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Specifications */}
+              <div>
+                <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-accent rounded-full" />
+                  Especificações
+                </p>
+                <div className="space-y-3 bg-secondary/5 rounded-lg p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-foreground">Material:</span>
+                    <span className="text-muted-foreground">{product.specifications.material}</span>
+                  </div>
+                  {product.specifications.capacity && (
+                    <div className="flex justify-between items-center border-t border-border pt-3">
+                      <span className="font-semibold text-foreground">Capacidade:</span>
+                      <span className="text-muted-foreground">{product.specifications.capacity}</span>
+                    </div>
+                  )}
+                  {product.specifications.dimensions && (
+                    <div className="flex justify-between items-center border-t border-border pt-3">
+                      <span className="font-semibold text-foreground">Dimensões:</span>
+                      <span className="text-muted-foreground">{product.specifications.dimensions}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features */}
+          {product.specifications.features && product.specifications.features.length > 0 && (
+            <div className="border-t border-border pt-8">
+              <p className="text-lg font-bold heading mb-4 flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent rounded-full" />
+                Características
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {product.specifications.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3 bg-secondary/5 rounded-lg p-4">
+                    <div className="w-2 h-2 rounded-full bg-accent mt-2 flex-shrink-0" />
+                    <span className="text-sm text-foreground">{feature}</span>
+                  </div>
                 ))}
               </div>
             </div>
