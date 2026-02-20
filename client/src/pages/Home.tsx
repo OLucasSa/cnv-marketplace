@@ -14,6 +14,9 @@ const parseJSON = (str: string | null | undefined): any[] => {
     const trimmed = str.trim();
     if (!trimmed || trimmed === '{}' || trimmed === '[]') return [];
     if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) return [];
+    const isArray = trimmed.startsWith('[');
+    const isObj = trimmed.startsWith('{');
+    if ((isArray && !trimmed.endsWith(']')) || (isObj && !trimmed.endsWith('}'))) return [];
     const parsed = JSON.parse(trimmed);
     return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
