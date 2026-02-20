@@ -24,8 +24,8 @@ export const appRouter = router({
     list: publicProcedure.query(() => productHelpers.getActiveProducts()),
     all: publicProcedure.query(() => productHelpers.getAllProducts()),
     getById: publicProcedure.input(z.number()).query(({ input }) => productHelpers.getProductById(input)),
-    stats: editorProcedure.query(() => productHelpers.getProductStats()),
-    create: editorProcedure
+    stats: publicProcedure.query(() => productHelpers.getProductStats()),
+    create: publicProcedure
       .input(z.object({
         name: z.string().min(1),
         description: z.string().optional(),
@@ -40,7 +40,7 @@ export const appRouter = router({
         features: z.string().optional(),
       }))
       .mutation(({ input }) => productHelpers.createProduct(input)),
-    update: editorProcedure
+    update: publicProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().optional(),
@@ -60,7 +60,7 @@ export const appRouter = router({
         const { id, ...data } = input;
         return productHelpers.updateProduct(id, data);
       }),
-    delete: editorProcedure
+    delete: publicProcedure
       .input(z.number())
       .mutation(({ input }) => productHelpers.softDeleteProduct(input)),
   }),
