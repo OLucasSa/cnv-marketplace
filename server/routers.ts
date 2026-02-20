@@ -62,7 +62,7 @@ export const appRouter = router({
       }),
     delete: publicProcedure
       .input(z.number())
-      .mutation(({ input }) => productHelpers.softDeleteProduct(input)),
+      .mutation(({ input }) => productHelpers.deleteProduct(input)),
   }),
 
   users: router({

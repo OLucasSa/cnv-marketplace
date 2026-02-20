@@ -25,7 +25,14 @@ export default function Admin() {
   const [editingId, setEditingId] = useState<number | undefined>(undefined);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState<"products" | "users">("products");
-  const deleteMutation = trpc.products.delete.useMutation();
+  const utils = trpc.useUtils();
+  const deleteMutation = trpc.products.delete.useMutation({
+    onSuccess: () => {
+      utils.products.all.invalidate();
+      utils.products.list.invalidate();
+      utils.products.stats.invalidate();
+    },
+  });
 
   // Verificar URL secreta
   useEffect(() => {
@@ -58,7 +65,6 @@ export default function Admin() {
     try {
       await deleteMutation.mutateAsync(productId);
       toast.success("Produto excluído com sucesso!");
-      setRefreshTrigger(prev => prev + 1);
     } catch (error) {
       toast.error("Erro ao excluir produto");
       console.error(error);

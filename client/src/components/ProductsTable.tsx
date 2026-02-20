@@ -10,6 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ProductsTableProps {
   onEdit: (productId: number) => void;
@@ -19,12 +28,18 @@ interface ProductsTableProps {
 
 export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: ProductsTableProps) {
   const { data: products, isLoading, refetch } = trpc.products.all.useQuery();
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
-  const handleDelete = (id: number) => {
-    if (confirm("Tem certeza que deseja excluir este produto?")) {
-      onDelete(id);
+  const handleDeleteConfirm = async () => {
+    if (deleteConfirmId !== null) {
+      onDelete(deleteConfirmId);
+      setDeleteConfirmId(null);
       setTimeout(() => refetch(), 500);
     }
+  };
+
+  const handleDelete = (id: number) => {
+    setDeleteConfirmId(id);
   };
 
   if (isLoading) {
@@ -36,7 +51,8 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
   }
 
   return (
-    <div className="border border-border rounded-lg overflow-hidden">
+    <>
+      <div className="border border-border rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-secondary/5">
@@ -115,5 +131,23 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
         </TableBody>
       </Table>
     </div>
+
+      <AlertDialog open={deleteConfirmId !== null} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir Produto</AlertDialogTitle>
+          <AlertDialogDescription>
+            Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <div className="flex gap-3 justify-end">
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700">
+            Excluir
+          </AlertDialogAction>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }

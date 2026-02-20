@@ -1,9 +1,9 @@
-import { adminProcedure, router } from "../_core/trpc";
+import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { storagePut } from "../storage";
 
 export const uploadRouter = router({
-  image: adminProcedure
+  image: publicProcedure
     .input(z.object({
       base64: z.string(),
       fileName: z.string(),
