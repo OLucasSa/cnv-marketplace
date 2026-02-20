@@ -8,6 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 
+const parseJSON = (str: string | null | undefined) => {
+  try {
+    if (!str || typeof str !== 'string') return [];
+    const trimmed = str.trim();
+    if (!trimmed || trimmed === '{}' || trimmed === '[]') return [];
+    return JSON.parse(trimmed);
+  } catch (e) {
+    console.error('Error parsing JSON:', e);
+    return [];
+  }
+};
+
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,15 +170,6 @@ export default function Home() {
             <TabsContent value={selectedCategory} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product, idx) => {
-                  const parseJSON = (str: string | null | undefined) => {
-                    try {
-                      return str && str.trim() ? JSON.parse(str) : [];
-                    } catch (e) {
-                      console.error('Error parsing JSON:', e);
-                      return [];
-                    }
-                  };
-
                   const productData = {
                     id: String(product.id),
                     name: product.name,
