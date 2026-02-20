@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const hasInitializedRef = useRef(false);
 
   const utils = trpc.useUtils();
   const createMutation = trpc.products.create.useMutation({
@@ -61,8 +62,9 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     enabled: !!productId,
   });
 
+  // Initialize form data only once when product loads
   useEffect(() => {
-    if (product) {
+    if (product && !hasInitializedRef.current) {
       setFormData({
         name: product.name,
         description: product.description || "",
@@ -76,8 +78,9 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         features: product.features || "",
         status: product.status as "active" | "inactive",
       });
+      hasInitializedRef.current = true;
     }
-  }, [product]);
+  }, [product?.id]); // Only depend on product.id, not product object
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,6 +200,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
 
       <div>
         <ColorSelector
+          key={`color-selector-${productId || 'new'}`}
           value={formData.colors}
           onChange={(colorIds) => setFormData({ ...formData, colors: colorIds })}
         />

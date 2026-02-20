@@ -1,6 +1,5 @@
-import { useMemo, useCallback } from 'react';
+import { useReducer, useCallback, useMemo } from 'react';
 import { COLOR_PALETTE, ColorId, parseColorIds, stringifyColorIds } from "@shared/colors";
-import { Button } from "@/components/ui/button";
 
 interface ColorSelectorProps {
   value: string | null | undefined;
@@ -8,13 +7,40 @@ interface ColorSelectorProps {
   disabled?: boolean;
 }
 
-export default function ColorSelector({ value, onChange, disabled = false }: ColorSelectorProps) {
-  const selectedIds = useMemo(() => parseColorIds(value), [value]);
+type ColorAction = { type: 'toggle'; colorId: ColorId };
 
-  const toggleColor = useCallback((colorId: ColorId) => {
+function colorReducer(selectedIds: ColorId[], action: ColorAction): ColorId[] {
+  switch (action.type) {
+    case 'toggle': {
+      const colorId = action.colorId;
+      if (selectedIds.includes(colorId)) {
+        return selectedIds.filter((id) => id !== colorId);
+      } else {
+        return [...selectedIds, colorId];
+      }
+    }
+    default:
+      return selectedIds;
+  }
+}
+
+export default function ColorSelector({ value, onChange, disabled = false }: ColorSelectorProps) {
+  // Parse initial colors from value
+  const initialColors = useMemo(() => parseColorIds(value), []);
+  
+  // Use reducer to manage color state locally
+  const [selectedIds, dispatch] = useReducer(colorReducer, initialColors);
+
+  // Notify parent of changes - called directly in toggle, not via useEffect
+  const handleToggle = useCallback((colorId: ColorId) => {
     const newIds = selectedIds.includes(colorId)
       ? selectedIds.filter((id) => id !== colorId)
       : [...selectedIds, colorId];
+    
+    // Update local state
+    dispatch({ type: 'toggle', colorId });
+    
+    // Notify parent immediately
     const stringified = stringifyColorIds(newIds);
     onChange(stringified);
   }, [selectedIds, onChange]);
@@ -27,8 +53,8 @@ export default function ColorSelector({ value, onChange, disabled = false }: Col
           const isSelected = selectedIds.includes(color.id as ColorId);
           return (
             <button
-              key={color.id}
-              onClick={() => toggleColor(color.id as ColorId)}
+              key={`color-${color.id}`}
+              onClick={() => handleToggle(color.id as ColorId)}
               disabled={disabled}
               className={`relative w-full aspect-square rounded-lg transition-all border-2 ${
                 isSelected ? "border-foreground ring-2 ring-offset-2 ring-accent" : "border-border hover:border-accent"
