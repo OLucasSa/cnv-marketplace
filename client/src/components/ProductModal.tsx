@@ -28,11 +28,20 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
   const hasSizes = product.sizes && product.sizes.length > 0;
   
-  // Parse colors from string to array of color objects
-  const colorIds = parseColorIds(product.colors);
-  const colors = colorIds
-    .map(id => COLOR_PALETTE.find(c => c.id === id))
-    .filter(Boolean) as typeof COLOR_PALETTE;
+  // Parse colors - handle both string IDs and array formats
+  let colors: (typeof COLOR_PALETTE)[number][] = [];
+  if (typeof product.colors === 'string') {
+    // Handle string format (e.g., "1,2,3")
+    const colorIds = parseColorIds(product.colors);
+    colors = colorIds
+      .map(id => COLOR_PALETTE.find(c => c.id === id))
+      .filter((c): c is (typeof COLOR_PALETTE)[number] => Boolean(c));
+  } else if (Array.isArray(product.colors)) {
+    // Handle array format - match by hex code
+    colors = product.colors
+      .map(c => COLOR_PALETTE.find(p => p.hex === c.hex))
+      .filter((c): c is (typeof COLOR_PALETTE)[number] => Boolean(c));
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -123,7 +132,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
               </p>
               <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
                 {colors && colors.length > 0 ? (
-                  colors.map((color) => (
+                  colors.map((color: typeof COLOR_PALETTE[number]) => (
                     <button
                       key={color.hex}
                       onClick={() => setSelectedColor(color.displayName)}
