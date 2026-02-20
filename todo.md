@@ -227,3 +227,13 @@
 - [x] Verificar salvamento de URL do banner em localStorage (FUNCIONANDO)
 - [x] Verificar função de update de produtos (FUNCIONANDO)
 - [x] Revisar conflito entre novos campos adicionados (RESOLVIDO)
+
+
+## Implementação de Sistema de Upload de Logo/Ícone (Implementado)
+- [x] Criar componente LogoSettings para upload com drag & drop
+- [x] Suportar formatos PNG e JPG
+- [x] Criar componente LogoDisplay para exibir logo no header
+- [x] Adicionar aba "Logo/Ícone" ao Admin.tsx
+- [x] Integrar armazenamento em localStorage
+- [ ] Testar upload e exibição no marketplace (aguardando deploy)
+- [ ] Validar responsividade em mobile e desktop (aguardando deploy)

@@ -12,6 +12,7 @@ import {
 import ProductsTable from "@/components/ProductsTable";
 import ProductForm from "@/components/ProductForm";
 import BannerSettings from "@/components/BannerSettings";
+import LogoSettings from "@/components/LogoSettings";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -108,6 +109,9 @@ export default function Admin() {
             <TabsTrigger value="banner" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Banner
             </TabsTrigger>
+            <TabsTrigger value="logo" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              Logo/Ícone
+            </TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
@@ -129,6 +133,11 @@ export default function Admin() {
           {/* Banner Tab */}
           <TabsContent value="banner" className="space-y-6">
             <BannerSettings />
+          </TabsContent>
+
+          {/* Logo Tab */}
+          <TabsContent value="logo" className="space-y-6">
+            <LogoSettings />
           </TabsContent>
         </Tabs>
 
