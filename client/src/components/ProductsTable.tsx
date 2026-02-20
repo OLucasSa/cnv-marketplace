@@ -1,5 +1,6 @@
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
+import ColorBadges from "./ColorBadges";
 import { Loader2, Edit2, Trash2, Eye } from "lucide-react";
 import { useState } from "react";
 import {
@@ -61,6 +62,7 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
             <TableHead>Categoria</TableHead>
             <TableHead>Preço</TableHead>
             <TableHead>Estoque</TableHead>
+            <TableHead>Cores</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
@@ -89,6 +91,9 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
                   <span className={product.stock === 0 ? "text-red-500 font-semibold" : ""}>
                     {product.stock}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <ColorBadges colorString={product.colors} />
                 </TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${

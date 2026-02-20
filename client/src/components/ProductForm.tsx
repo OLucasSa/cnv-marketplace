@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ImageUpload from "./ImageUpload";
+import ColorSelector from "./ColorSelector";
 
 interface ProductFormProps {
   productId?: number;
@@ -197,13 +198,9 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
       </div>
 
       <div>
-        <Label htmlFor="colors">Cores (JSON)</Label>
-        <Textarea
-          id="colors"
+        <ColorSelector
           value={formData.colors}
-          onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
-          placeholder='[{"name": "Vermelho", "hex": "#FF0000"}]'
-          rows={2}
+          onChange={(colorIds) => setFormData({ ...formData, colors: colorIds })}
         />
       </div>
 

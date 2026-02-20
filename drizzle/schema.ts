@@ -49,3 +49,30 @@ export const products = mysqlTable("products", {
 
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
+
+/**
+ * Predefined colors for products
+ */
+export const colors = mysqlTable("colors", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  hex: varchar("hex", { length: 7 }).notNull(),
+  displayName: varchar("displayName", { length: 100 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Color = typeof colors.$inferSelect;
+export type InsertColor = typeof colors.$inferInsert;
+
+/**
+ * Product colors (many-to-many relationship)
+ */
+export const productColors = mysqlTable("productColors", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull(),
+  colorId: int("colorId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProductColor = typeof productColors.$inferSelect;
+export type InsertProductColor = typeof productColors.$inferInsert;

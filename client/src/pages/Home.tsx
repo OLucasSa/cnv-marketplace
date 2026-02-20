@@ -7,23 +7,9 @@ import ProductModal from '@/components/ProductModal';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
+import ColorBadges from '@/components/ColorBadges';
 
-const parseJSON = (str: string | null | undefined): any[] => {
-  try {
-    if (str === null || str === undefined || typeof str !== 'string') return [];
-    const trimmed = str.trim();
-    if (!trimmed || trimmed === '{}' || trimmed === '[]') return [];
-    if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) return [];
-    const isArray = trimmed.startsWith('[');
-    const isObj = trimmed.startsWith('{');
-    if ((isArray && !trimmed.endsWith(']')) || (isObj && !trimmed.endsWith('}'))) return [];
-    const parsed = JSON.parse(trimmed);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.error('Error parsing JSON:', str, e);
-    return [];
-  }
-};
+
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
@@ -182,8 +168,8 @@ export default function Home() {
                     price: product.price,
                     image: product.imageUrl || '',
                     description: product.description || '',
-                    colors: parseJSON(product.colors),
-                    sizes: parseJSON(product.sizes),
+                    colors: [],
+                    sizes: [],
                     specifications: {
                       material: 'Personalizado',
                       features: product.features ? product.features.split(',') : [],
