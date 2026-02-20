@@ -140,7 +140,8 @@
 ## Correções e Melhorias Solicitadas
 - [x] Remover campo "Imagem do Produto" (ImageUpload)
 - [x] Consolidar tudo em "Galeria de Imagens" (ImageGalleryManager)
-- [x] Corrigir erro NotFoundError no upload de imagens
+- [x] Corrigir erro NotFoundError no upload de imagens (refatorado com useEffect)
 - [x] Adicionar scroll vertical no modal do formulário
 - [x] Testar upload, salvamento e atualização de imagens
 - [x] Validar acesso aos botões de ação
+- [x] Criar testes vitest para validar refatoração

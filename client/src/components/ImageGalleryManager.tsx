@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
@@ -13,13 +13,74 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
   const [isUploading, setIsUploading] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadMutation = trpc.upload.image.useMutation();
 
   // Parse images from string (separated by |)
   const images = imageString ? imageString.split('|').filter(url => url.trim()) : [];
 
-  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle file upload in useEffect to avoid closure issues
+  useEffect(() => {
+    if (!pendingFile || isUploading) return;
+
+    const processUpload = async () => {
+      try {
+        setIsUploading(true);
+        const reader = new FileReader();
+
+        reader.onload = async () => {
+          try {
+            const base64 = reader.result as string;
+            const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
+
+            const result = await uploadMutation.mutateAsync({
+              base64: base64Data,
+              fileName: pendingFile.name,
+            });
+
+            if (result.url) {
+              // Get current images from the parent
+              const currentImages = imageString ? imageString.split('|').filter(url => url.trim()) : [];
+              const newImages = [...currentImages, result.url];
+              const newImageString = newImages.join('|');
+              onImagesChange(newImageString);
+              toast.success('Imagem adicionada com sucesso!');
+
+              // Reset file input
+              if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+              }
+            }
+          } catch (error) {
+            console.error('Erro ao fazer upload:', error);
+            toast.error('Erro ao fazer upload da imagem');
+          } finally {
+            setIsUploading(false);
+            setPendingFile(null);
+          }
+        };
+
+        reader.onerror = () => {
+          console.error('Erro ao ler arquivo');
+          toast.error('Erro ao ler arquivo');
+          setIsUploading(false);
+          setPendingFile(null);
+        };
+
+        reader.readAsDataURL(pendingFile);
+      } catch (error) {
+        console.error('Erro ao processar imagem:', error);
+        toast.error('Erro ao processar imagem');
+        setIsUploading(false);
+        setPendingFile(null);
+      }
+    };
+
+    processUpload();
+  }, [pendingFile, imageString, onImagesChange, uploadMutation]);
+
+  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -35,53 +96,9 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
       return;
     }
 
-    setIsUploading(true);
-
-    try {
-      const reader = new FileReader();
-      
-      reader.onload = async () => {
-        try {
-          const base64 = reader.result as string;
-          const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
-
-          const result = await uploadMutation.mutateAsync({
-            base64: base64Data,
-            fileName: file.name,
-          });
-
-          if (result.url) {
-            const newImages = [...images, result.url];
-            const newImageString = newImages.join('|');
-            onImagesChange(newImageString);
-            toast.success('Imagem adicionada com sucesso!');
-            
-            // Reset file input
-            if (fileInputRef.current) {
-              fileInputRef.current.value = '';
-            }
-          }
-        } catch (error) {
-          console.error('Erro ao fazer upload:', error);
-          toast.error('Erro ao fazer upload da imagem');
-        } finally {
-          setIsUploading(false);
-        }
-      };
-
-      reader.onerror = () => {
-        console.error('Erro ao ler arquivo');
-        toast.error('Erro ao ler arquivo');
-        setIsUploading(false);
-      };
-
-      reader.readAsDataURL(file);
-    } catch (error) {
-      console.error('Erro ao processar imagem:', error);
-      toast.error('Erro ao processar imagem');
-      setIsUploading(false);
-    }
-  }, [images, onImagesChange, uploadMutation]);
+    // Set pending file to trigger upload in useEffect
+    setPendingFile(file);
+  }, []);
 
   const removeImage = useCallback((index: number) => {
     const newImages = images.filter((_, i) => i !== index);
@@ -112,7 +129,7 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
     // Reorder images
     const newImages = [...images];
     const draggedImage = newImages[draggedIndex];
-    
+
     // Remove from original position
     newImages.splice(draggedIndex, 1);
     // Insert at new position
@@ -182,7 +199,7 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
                 className="w-full h-24 object-cover rounded-lg border border-border"
                 draggable={false}
               />
-              
+
               {/* Drag Handle */}
               <div className="absolute top-1 left-1 bg-black/50 text-white rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <GripVertical className="h-3 w-3" />
