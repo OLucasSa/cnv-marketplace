@@ -193,3 +193,12 @@
 - [x] Manter layout vertical responsivo para mobile
 - [x] Testar em diferentes resoluções de desktop
 - [x] Validar visibilidade de todas as informações sem rolagem excessiva
+
+
+## Correção da Seção de Cores no Modal (Concluído)
+- [x] Remover sobreposição de cores no grid
+- [x] Reorganizar grid de cores para ser mais compacto
+- [x] Remover seção "Material: Personalizado" (Especificações)
+- [x] Manter apenas cores, tamanhos e características
+- [x] Testar layout corrigido
+- [x] Validar responsividade

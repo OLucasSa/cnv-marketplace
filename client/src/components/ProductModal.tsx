@@ -113,53 +113,51 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </div>
           </div>
 
-          {/* Bottom Section - Colors, Sizes, Specs in 3 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 border-t border-border pt-6 md:pt-8">
+          {/* Bottom Section - Colors and Sizes/Features */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-6 md:pt-8">
             {/* Colors - Left Column */}
             <div>
-              <p className="text-base md:text-lg font-bold heading mb-3 md:mb-4 flex items-center gap-2">
+              <p className="text-base md:text-lg font-bold heading mb-4 flex items-center gap-2">
                 <div className="w-1 h-6 bg-accent rounded-full" />
-                Cores
+                Cores Disponíveis
               </p>
-              <div className="grid grid-cols-5 gap-2 md:gap-3">
+              <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
                 {colors && colors.length > 0 ? (
                   colors.map((color) => (
                     <button
                       key={color.hex}
-                      onClick={() => setSelectedColor(color.hex)}
-                      className={`flex flex-col items-center gap-0.5 transition-all duration-300 ${
-                        selectedColor === color.hex ? 'opacity-100' : 'opacity-70 hover:opacity-100'
-                      }`}
+                      onClick={() => setSelectedColor(color.displayName)}
+                      className={`flex flex-col items-center gap-1 transition-all duration-300 relative group ${'opacity-100'}`}
                       title={color.displayName}
                     >
                       <div
-                        className={`w-12 h-12 md:w-14 md:h-14 rounded-lg border-3 md:border-4 transition-all ${
-                          selectedColor === color.hex
-                            ? 'border-accent shadow-lg scale-110'
+                        className={`w-10 h-10 rounded-lg border-2 transition-all ${
+                          selectedColor === color.displayName
+                            ? 'border-accent shadow-md ring-2 ring-accent'
                             : 'border-border hover:border-accent'
                         }`}
                         style={{ backgroundColor: color.hex }}
                       />
-                      <p className="text-xs text-center font-medium text-foreground line-clamp-1 text-[10px] md:text-xs">
-                        {color.displayName}
-                      </p>
-                      {selectedColor === color.hex && (
-                        <Check className="w-3 h-3 text-accent absolute mt-8" />
+                      {selectedColor === color.displayName && (
+                        <Check className="w-3 h-3 text-accent absolute -top-1 -right-1 bg-white rounded-full" />
                       )}
+                      <span className="text-[9px] text-center font-medium text-foreground line-clamp-1 hidden group-hover:block absolute -bottom-6 bg-foreground text-background px-2 py-1 rounded whitespace-nowrap z-10">
+                        {color.displayName}
+                      </span>
                     </button>
                   ))
                 ) : (
-                  <p className="text-sm text-muted-foreground col-span-4">Sem cores</p>
+                  <p className="text-sm text-muted-foreground col-span-6">Sem cores</p>
                 )}
               </div>
             </div>
 
-            {/* Sizes & Specs - Middle Column */}
-            <div className="space-y-4 md:space-y-6">
+            {/* Sizes & Features - Right Column */}
+            <div className="space-y-6">
               {/* Sizes */}
               {hasSizes && (
                 <div>
-                  <p className="text-base md:text-lg font-bold heading mb-2 md:mb-3 flex items-center gap-2">
+                  <p className="text-base md:text-lg font-bold heading mb-3 flex items-center gap-2">
                     <div className="w-1 h-6 bg-accent rounded-full" />
                     Tamanhos
                   </p>
@@ -181,50 +179,24 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 </div>
               )}
 
-              {/* Specifications */}
-              <div>
-                <p className="text-base md:text-lg font-bold heading mb-2 md:mb-3 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-accent rounded-full" />
-                  Especificações
-                </p>
-                <div className="space-y-1.5 md:space-y-2 bg-secondary/5 rounded-lg p-3 md:p-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-foreground text-sm">Material:</span>
-                    <span className="text-muted-foreground text-sm">{product.specifications.material}</span>
+              {/* Features */}
+              {product.specifications.features && product.specifications.features.length > 0 && (
+                <div>
+                  <p className="text-base md:text-lg font-bold heading mb-3 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-accent rounded-full" />
+                    Características
+                  </p>
+                  <div className="space-y-2">
+                    {product.specifications.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-2 bg-secondary/5 rounded-lg p-3">
+                        <div className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
+                        <span className="text-sm text-foreground">{feature}</span>
+                      </div>
+                    ))}
                   </div>
-                  {product.specifications.capacity && (
-                    <div className="flex justify-between items-center border-t border-border pt-2">
-                      <span className="font-semibold text-foreground text-sm">Capacidade:</span>
-                      <span className="text-muted-foreground text-sm">{product.specifications.capacity}</span>
-                    </div>
-                  )}
-                  {product.specifications.dimensions && (
-                    <div className="flex justify-between items-center border-t border-border pt-2">
-                      <span className="font-semibold text-foreground text-sm">Dimensões:</span>
-                      <span className="text-muted-foreground text-sm">{product.specifications.dimensions}</span>
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
             </div>
-
-            {/* Features - Right Column */}
-            {product.specifications.features && product.specifications.features.length > 0 && (
-              <div>
-                <p className="text-base md:text-lg font-bold heading mb-2 md:mb-3 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-accent rounded-full" />
-                  Características
-                </p>
-                <div className="space-y-2">
-                  {product.specifications.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-2 bg-secondary/5 rounded-lg p-3">
-                      <div className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
-                      <span className="text-sm text-foreground">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </DialogContent>
