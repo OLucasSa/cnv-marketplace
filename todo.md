@@ -127,3 +127,11 @@
 - [x] Testar carousel na página pública
 - [x] Testar compatibilidade com produtos existentes
 - [x] Testar fallback quando sem imagens
+
+
+## Drag-and-Drop para Reordenar Imagens
+- [x] Implementar handlers de drag (onDragStart, onDragOver, onDrop)
+- [x] Adicionar feedback visual durante drag (highlight, opacity)
+- [x] Reordenar array de imagens ao soltar
+- [x] Testar em desktop e mobile
+- [x] Criar checkpoint final

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, GripVertical } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
@@ -11,6 +11,8 @@ interface ImageGalleryManagerProps {
 
 export default function ImageGalleryManager({ imageString, onImagesChange }: ImageGalleryManagerProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const uploadMutation = trpc.upload.image.useMutation();
 
   // Parse images from string (separated by |)
@@ -55,6 +57,45 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
     toast.success('Imagem removida');
   };
 
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+
+    if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+    // Reorder images
+    const newImages = [...images];
+    const draggedImage = newImages[draggedIndex];
+    
+    // Remove from original position
+    newImages.splice(draggedIndex, 1);
+    // Insert at new position
+    newImages.splice(dropIndex, 0, draggedImage);
+
+    const newImageString = newImages.join('|');
+    onImagesChange(newImageString);
+    setDraggedIndex(null);
+    toast.success('Imagens reordenadas com sucesso!');
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -78,16 +119,39 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
         />
       </div>
 
-      {/* Image Grid */}
+      {/* Image Grid with Drag-and-Drop */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {images.length > 0 ? (
           images.map((image, index) => (
-            <div key={index} className="relative group">
+            <div
+              key={index}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={handleDragEnd}
+              className={`relative group cursor-move transition-all duration-200 ${
+                draggedIndex === index
+                  ? 'opacity-50 scale-95'
+                  : dragOverIndex === index
+                  ? 'ring-2 ring-accent scale-105 bg-accent/10'
+                  : ''
+              }`}
+            >
               <img
                 src={image}
                 alt={`Imagem ${index + 1}`}
                 className="w-full h-24 object-cover rounded-lg border border-border"
+                draggable={false}
               />
+              
+              {/* Drag Handle */}
+              <div className="absolute top-1 left-1 bg-black/50 text-white rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical className="h-3 w-3" />
+              </div>
+
+              {/* Delete Button */}
               <Button
                 type="button"
                 variant="destructive"
@@ -97,6 +161,8 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
               >
                 <Trash2 className="h-3 w-3" />
               </Button>
+
+              {/* Image Number */}
               <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
                 {index + 1}
               </div>
@@ -108,6 +174,13 @@ export default function ImageGalleryManager({ imageString, onImagesChange }: Ima
           </div>
         )}
       </div>
+
+      {/* Drag Hint */}
+      {images.length > 1 && (
+        <p className="text-xs text-muted-foreground text-center">
+          💡 Dica: Arraste as imagens para reordenar a galeria
+        </p>
+      )}
     </div>
   );
 }
