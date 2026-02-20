@@ -4,6 +4,7 @@ export interface Product {
   category: string;
   description: string;
   image: string;
+  imageUrl?: string; // Múltiplas imagens separadas por |
   colors: Array<{
     name: string;
     hex: string;

@@ -145,3 +145,11 @@
 - [x] Testar upload, salvamento e atualização de imagens
 - [x] Validar acesso aos botões de ação
 - [x] Criar testes vitest para validar refatoração
+
+
+## Carrossel de Imagens no Marketplace
+- [x] Implementar carrossel no ProductModal.tsx
+- [x] Corrigir desaparecimento de imagens ao atualizar
+- [x] Corrigir erro NotFoundError no ImageCarousel (memoization e validação)
+- [x] Testar com múltiplas imagens
+- [x] Validar que dashboard não trava (removido useMemo problemático)

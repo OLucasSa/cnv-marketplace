@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { X, Check } from 'lucide-react';
 import { useState } from 'react';
+import ImageCarousel from './ImageCarousel';
 
 interface ProductModalProps {
   product: Product | null;
@@ -15,6 +16,16 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   if (!product) return null;
+
+  // Parse images directly without useMemo
+  const images = product.imageUrl
+    ? product.imageUrl
+        .split('|')
+        .map((url: string) => url.trim())
+        .filter((url: string) => url.length > 0)
+    : [];
+
+  const hasSizes = product.sizes && product.sizes.length > 0;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -37,21 +48,10 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-          {/* Product Image */}
+          {/* Product Image Carousel */}
           <div className="flex flex-col gap-4">
-            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center">
-              {product.image && product.image.trim() ? (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center text-muted-foreground">
-                  <p className="text-sm">Imagem não disponível</p>
-                </div>
-              )}
-            </div>
+            <ImageCarousel images={images} productName={product.name} />
+            
             {/* Color Swatches */}
             <div>
               <p className="text-sm font-semibold mb-3 heading">Cores Disponíveis</p>
@@ -131,11 +131,11 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </div>
 
             {/* Sizes */}
-            {product.sizes && product.sizes.length > 0 && (
+            {hasSizes && (
               <div className="border-t border-border pt-6">
                 <p className="text-lg font-bold heading mb-4">Tamanhos</p>
                 <div className="flex gap-3">
-                  {product.sizes.map((size) => (
+                  {product.sizes!.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -156,7 +156,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             <div className="border-t border-border pt-6 flex gap-3">
               <Button
                 onClick={() => {
-                  // Aqui você pode adicionar lógica de contato via WhatsApp
                   const message = `Olá! Tenho interesse no produto: ${product.name}${
                     selectedColor ? ` na cor ${selectedColor}` : ''
                   }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
