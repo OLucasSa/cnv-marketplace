@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import { COLOR_PALETTE, ColorId, parseColorIds, stringifyColorIds } from "@shared/colors";
 import { Button } from "@/components/ui/button";
 
@@ -8,18 +9,15 @@ interface ColorSelectorProps {
 }
 
 export default function ColorSelector({ value, onChange, disabled = false }: ColorSelectorProps) {
-  const selectedIds = parseColorIds(value);
-  console.log('[ColorSelector] Current value:', value);
-  console.log('[ColorSelector] Parsed IDs:', selectedIds);
+  const selectedIds = useMemo(() => parseColorIds(value), [value]);
 
-  const toggleColor = (colorId: ColorId) => {
+  const toggleColor = useCallback((colorId: ColorId) => {
     const newIds = selectedIds.includes(colorId)
       ? selectedIds.filter((id) => id !== colorId)
       : [...selectedIds, colorId];
     const stringified = stringifyColorIds(newIds);
-    console.log('[ColorSelector] Toggle color', colorId, '-> New IDs:', newIds, '-> Stringified:', stringified);
     onChange(stringified);
-  };
+  }, [selectedIds, onChange]);
 
   return (
     <div className="space-y-3">
@@ -37,6 +35,7 @@ export default function ColorSelector({ value, onChange, disabled = false }: Col
               } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               style={{ backgroundColor: color.hex }}
               title={color.displayName}
+              type="button"
             >
               {isSelected && (
                 <div className="absolute inset-0 flex items-center justify-center">

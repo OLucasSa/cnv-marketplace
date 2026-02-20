@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
 import { trpc } from '@/lib/trpc';

@@ -143,17 +143,19 @@ export default function Admin() {
 
         {/* Product Form Dialog */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? "Editar Produto" : "Novo Produto"}
               </DialogTitle>
             </DialogHeader>
-            <ProductForm
-              productId={editingId}
-              onSuccess={handleFormSuccess}
-              onCancel={() => setIsOpen(false)}
-            />
+            <div className="overflow-y-auto flex-1">
+              <ProductForm
+                productId={editingId}
+                onSuccess={handleFormSuccess}
+                onCancel={() => setIsOpen(false)}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </div>

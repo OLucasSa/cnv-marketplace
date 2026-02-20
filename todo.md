@@ -237,3 +237,13 @@
 - [x] Integrar armazenamento em localStorage
 - [ ] Testar upload e exibição no marketplace (aguardando deploy)
 - [ ] Validar responsividade em mobile e desktop (aguardando deploy)
+
+## 🚨 BUG CRÍTICO - Erro ao Atualizar Produtos (RESOLVIDO ✅)
+- [x] Diagnosticar erro "NotFoundError: Failed to execute 'removeChild'" ao atualizar produtos
+- [x] Corrigir problema de DOM/React em ProductForm.tsx
+- [x] Testar atualização de produto sem cores
+- [x] Testar atualização de produto com mudança de cores
+- [x] Testar atualização de múltiplas cores
+- [x] Validar que não há crashes no frontend
+- [x] Validar que não há crashes no backend
+- [x] Testar fluxo completo antes de deploy

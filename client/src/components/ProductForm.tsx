@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,7 +79,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     }
   }, [product]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.category || !formData.price) {
@@ -107,10 +107,10 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData, productId, updateMutation, createMutation, onSuccess]);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-h-[85vh] overflow-y-auto pr-4">
+    <form onSubmit={handleSubmit} className="space-y-6 pr-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="name">Nome do Produto *</Label>
