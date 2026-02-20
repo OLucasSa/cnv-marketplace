@@ -40,8 +40,22 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const createMutation = trpc.products.create.useMutation();
-  const updateMutation = trpc.products.update.useMutation();
+  const utils = trpc.useUtils();
+  const createMutation = trpc.products.create.useMutation({
+    onSuccess: () => {
+      utils.products.all.invalidate();
+      utils.products.list.invalidate();
+      utils.products.stats.invalidate();
+    },
+  });
+  const updateMutation = trpc.products.update.useMutation({
+    onSuccess: () => {
+      utils.products.all.invalidate();
+      utils.products.list.invalidate();
+      utils.products.stats.invalidate();
+      utils.products.getById.invalidate();
+    },
+  });
   const { data: product } = trpc.products.getById.useQuery(productId || 0, {
     enabled: !!productId,
   });
@@ -163,7 +177,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <ImageUpload
-          onImageUpload={(url) => setFormData({ ...formData, imageUrl: url })}
+          onImageUpload={(url, key) => setFormData({ ...formData, imageUrl: url })}
           currentImageUrl={formData.imageUrl}
         />
       </div>
