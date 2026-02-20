@@ -169,7 +169,7 @@ export default function Home() {
                     image: product.imageUrl || '',
                     imageUrl: product.imageUrl || '',
                     description: product.description || '',
-                    colors: [],
+                    colors: product.colors || '',
                     sizes: [],
                     specifications: {
                       material: 'Personalizado',

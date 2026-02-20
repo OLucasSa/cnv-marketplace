@@ -9,12 +9,16 @@ interface ColorSelectorProps {
 
 export default function ColorSelector({ value, onChange, disabled = false }: ColorSelectorProps) {
   const selectedIds = parseColorIds(value);
+  console.log('[ColorSelector] Current value:', value);
+  console.log('[ColorSelector] Parsed IDs:', selectedIds);
 
   const toggleColor = (colorId: ColorId) => {
     const newIds = selectedIds.includes(colorId)
       ? selectedIds.filter((id) => id !== colorId)
       : [...selectedIds, colorId];
-    onChange(stringifyColorIds(newIds));
+    const stringified = stringifyColorIds(newIds);
+    console.log('[ColorSelector] Toggle color', colorId, '-> New IDs:', newIds, '-> Stringified:', stringified);
+    onChange(stringified);
   };
 
   return (

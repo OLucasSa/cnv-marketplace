@@ -172,3 +172,15 @@
 - [x] Reorganizar informações no modal (imagens, cores, preço, estoque)
 - [x] Melhorar navegação e usabilidade do modal
 - [x] Testar paginação e novo layout
+
+
+## Correção do Sistema de Cores (Concluído)
+- [x] Diagnosticar problema de cores não sendo exibidas no marketplace
+- [x] Corrigir ProductCard.tsx para usar parseColorIds() em vez de JSON.parse()
+- [x] Corrigir ProductModal.tsx para parsear string de cores corretamente
+- [x] Corrigir Home.tsx para passar colors corretos ao abrir modal
+- [x] Testar exibição de múltiplas cores no marketplace
+- [x] Testar salvamento de cores na dashboard
+- [x] Testar atualização de cores sem crashes
+- [x] Validar consistência entre dashboard e marketplace
+- [x] Adicionar logs de debug ao ColorSelector (removidos após testes)

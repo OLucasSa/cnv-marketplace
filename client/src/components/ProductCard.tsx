@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Product } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { COLOR_PALETTE, parseColorIds } from '@shared/colors';
 
 interface ProductCardProps {
   product: any;
@@ -23,12 +24,9 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
   // Fallback para product.image se existir
   const imageUrl = firstImage || (product.image && product.image.trim() ? product.image : null);
 
-  // Parse colors com fallback
-  const colors = Array.isArray(product.colors) 
-    ? product.colors 
-    : (typeof product.colors === 'string' 
-        ? JSON.parse(product.colors).catch(() => []) 
-        : []);
+  // Parse colors usando parseColorIds (espera "1,2,3")
+  const colorIds = parseColorIds(product.colors);
+  const colors = colorIds.map(id => COLOR_PALETTE.find(c => c.id === id)).filter(Boolean);
 
   // Parse specifications com fallback
   const specifications = typeof product.specifications === 'string'

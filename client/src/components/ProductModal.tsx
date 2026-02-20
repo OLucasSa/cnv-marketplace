@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { X, Check, ShoppingCart, Info } from 'lucide-react';
 import { useState } from 'react';
 import ImageCarousel from './ImageCarousel';
+import { parseColorIds, COLOR_PALETTE } from '@shared/colors';
 
 interface ProductModalProps {
   product: Product | null;
@@ -26,6 +27,12 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     : [];
 
   const hasSizes = product.sizes && product.sizes.length > 0;
+  
+  // Parse colors from string to array of color objects
+  const colorIds = parseColorIds(product.colors);
+  const colors = colorIds
+    .map(id => COLOR_PALETTE.find(c => c.id === id))
+    .filter(Boolean) as typeof COLOR_PALETTE;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -116,8 +123,8 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 Cores Disponíveis
               </p>
               <div className="grid grid-cols-4 gap-4">
-                {product.colors && product.colors.length > 0 ? (
-                  product.colors.map((color) => (
+                {colors && colors.length > 0 ? (
+                  colors.map((color) => (
                     <button
                       key={color.hex}
                       onClick={() => setSelectedColor(color.hex)}
