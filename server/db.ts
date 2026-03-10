@@ -90,3 +90,80 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // TODO: add feature queries here as your schema grows.
+
+
+// Color Presets functions
+export async function getAllColorPresets() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get presets: database not available");
+    return [];
+  }
+
+  try {
+    const { colorPresets } = await import("../drizzle/schema");
+    const result = await db.select().from(colorPresets).orderBy(colorPresets.createdAt);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to get color presets:", error);
+    return [];
+  }
+}
+
+export async function createColorPreset(name: string, colors: string, description?: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { colorPresets } = await import("../drizzle/schema");
+    const result = await db.insert(colorPresets).values({
+      name,
+      colors,
+      description,
+      isDefault: 0,
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create color preset:", error);
+    throw error;
+  }
+}
+
+export async function updateColorPreset(id: number, name: string, colors: string, description?: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { colorPresets } = await import("../drizzle/schema");
+    const result = await db.update(colorPresets).set({
+      name,
+      colors,
+      description,
+      updatedAt: new Date(),
+    }).where(eq(colorPresets.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to update color preset:", error);
+    throw error;
+  }
+}
+
+export async function deleteColorPreset(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { colorPresets } = await import("../drizzle/schema");
+    const result = await db.delete(colorPresets).where(eq(colorPresets.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to delete color preset:", error);
+    throw error;
+  }
+}

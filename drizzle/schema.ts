@@ -93,3 +93,19 @@ export const productImages = mysqlTable("productImages", {
 
 export type ProductImage = typeof productImages.$inferSelect;
 export type InsertProductImage = typeof productImages.$inferInsert;
+
+/**
+ * Color presets for quick application to products
+ */
+export const colorPresets = mysqlTable("colorPresets", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  colors: text("colors").notNull(), // Comma-separated color IDs (e.g., "1,2,3")
+  isDefault: tinyint("isDefault").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ColorPreset = typeof colorPresets.$inferSelect;
+export type InsertColorPreset = typeof colorPresets.$inferInsert;

@@ -6,6 +6,7 @@ import { z } from "zod";
 import * as productHelpers from "./products";
 import * as userHelpers from "./users";
 import { uploadRouter } from "./routers/upload";
+import * as dbHelpers from "./db";
 
 export const appRouter = router({
   system: systemRouter,
@@ -80,6 +81,36 @@ export const appRouter = router({
     listByRole: adminProcedure
       .input(z.enum(["admin", "editor", "user"]))
       .query(({ input }) => userHelpers.getUsersByRole(input)),
+  }),
+
+  colorPresets: router({
+    list: publicProcedure.query(async () => {
+      return dbHelpers.getAllColorPresets();
+    }),
+    create: publicProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        colors: z.string().min(1),
+        description: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return dbHelpers.createColorPreset(input.name, input.colors, input.description);
+      }),
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        colors: z.string().min(1),
+        description: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return dbHelpers.updateColorPreset(input.id, input.name, input.colors, input.description);
+      }),
+    delete: publicProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        return dbHelpers.deleteColorPreset(input);
+      }),
   }),
 
   upload: uploadRouter,

@@ -259,3 +259,16 @@
 - [x] Validar sincronizacao marketplace/dashboard
 - [x] Validar console sem erros
 - [x] Testar fluxo completo antes de deploy
+
+
+## 🎨 Nova Funcionalidade - Presets de Cores
+- [ ] Criar schema de presets no banco de dados
+- [ ] Implementar API tRPC para CRUD de presets
+- [ ] Criar UI de gerenciamento de presets na dashboard
+- [ ] Integrar seletor de presets no ProductForm
+- [ ] Permitir salvar cores atuais como novo preset
+- [ ] Permitir aplicar preset com um clique
+- [ ] Permitir editar nome e cores do preset
+- [ ] Permitir deletar presets
+- [ ] Testar aplicação de presets em novos produtos
+- [ ] Testar aplicação de presets em produtos existentes
