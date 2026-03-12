@@ -12,14 +12,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ProductsTableProps {
   onEdit: (productId: number) => void;
@@ -263,22 +261,22 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
         )}
       </div>
 
-      <AlertDialog open={deleteConfirmId !== null} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Produto</AlertDialogTitle>
-            <AlertDialogDescription>
+      <Dialog open={deleteConfirmId !== null} onOpenChange={(open: boolean) => !open && setDeleteConfirmId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Excluir Produto</DialogTitle>
+            <DialogDescription>
               Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
           <div className="flex gap-3 justify-end">
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700">
+            <Button variant="outline" onClick={() => setDeleteConfirmId(null)}>Cancelar</Button>
+            <Button onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700">
               Excluir
-            </AlertDialogAction>
+            </Button>
           </div>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

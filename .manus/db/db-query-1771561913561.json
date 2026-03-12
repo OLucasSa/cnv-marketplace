@@ -1,9 +1,0 @@
-{
-  "query": "UPDATE products SET colors = NULL WHERE colors IS NOT NULL AND (colors NOT LIKE '%]' OR colors NOT LIKE '%}'); UPDATE products SET sizes = NULL WHERE sizes IS NOT NULL AND (sizes NOT LIKE '%]' OR sizes NOT LIKE '%}');",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user NFLXR4X1BqV2Dun.root --database JqENYrGJnDCst7Pbb5cfUV --execute UPDATE products SET colors = NULL WHERE colors IS NOT NULL AND (colors NOT LIKE '%]' OR colors NOT LIKE '%}'); UPDATE products SET sizes = NULL WHERE sizes IS NOT NULL AND (sizes NOT LIKE '%]' OR sizes NOT LIKE '%}');",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 423
-}
