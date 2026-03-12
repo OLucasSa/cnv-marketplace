@@ -272,3 +272,17 @@
 - [ ] Permitir deletar presets
 - [ ] Testar aplicação de presets em novos produtos
 - [ ] Testar aplicação de presets em produtos existentes
+
+
+## Correção - Upload de Logo e Banner com Banco de Dados
+- [x] Criar tabela siteSettings no banco de dados
+- [x] Implementar funções getSiteSetting, setSiteSetting, deleteSiteSetting em db.ts
+- [x] Adicionar endpoints tRPC: bannerImage, logoImage, getBannerUrl, getLogoUrl, removeBanner, removeLogo
+- [x] Atualizar BannerSettings.tsx para usar banco de dados
+- [x] Atualizar LogoSettings.tsx para usar banco de dados
+- [x] Atualizar LogoDisplay.tsx para carregar logo do banco
+- [x] Atualizar BannerImageDisplay em Home.tsx para carregar banner do banco
+- [x] Adicionar schema de siteSettings em drizzle/schema.ts
+- [x] Criar testes vitest para validar funcionalidade (6 testes passando)
+- [x] Validar que imagens persistem no banco de dados
+- [x] Validar que imagens são visíveis para todos os usuários

@@ -109,3 +109,20 @@ export const colorPresets = mysqlTable("colorPresets", {
 
 export type ColorPreset = typeof colorPresets.$inferSelect;
 export type InsertColorPreset = typeof colorPresets.$inferInsert;
+
+
+/**
+ * Site settings for storing logo and banner URLs
+ */
+export const siteSettings = mysqlTable("siteSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  settingKey: varchar("settingKey", { length: 100 }).notNull().unique(),
+  settingValue: text("settingValue"),
+  imageUrl: text("imageUrl"),
+  imageKey: varchar("imageKey", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type InsertSiteSetting = typeof siteSettings.$inferInsert;

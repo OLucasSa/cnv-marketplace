@@ -1,29 +1,11 @@
-import { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc';
 
 export default function LogoDisplay() {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Carregar logo do localStorage
-    const savedLogo = localStorage.getItem('logoUrl');
-    if (savedLogo) {
-      setLogoUrl(savedLogo);
-    }
-
-    // Escutar evento de atualização de logo
-    const handleLogoUpdate = () => {
-      const updatedLogo = localStorage.getItem('logoUrl');
-      if (updatedLogo) {
-        setLogoUrl(updatedLogo);
-      }
-    };
-
-    window.addEventListener('logoUpdated', handleLogoUpdate);
-    return () => window.removeEventListener('logoUpdated', handleLogoUpdate);
-  }, []);
+  // Query para carregar logo do banco
+  const { data: logoUrl } = trpc.upload.getLogoUrl.useQuery();
 
   if (!logoUrl) {
-    // Logo padrão (emoji smiley)
+    // Logo padrão (letra C)
     return (
       <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
         <span className="text-accent-foreground font-bold text-lg">C</span>

@@ -1,0 +1,9 @@
+{
+  "query": "DROP TABLE IF EXISTS siteSettings;\n\nCREATE TABLE siteSettings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  settingKey VARCHAR(100) NOT NULL UNIQUE,\n  settingValue TEXT,\n  imageUrl TEXT,\n  imageKey VARCHAR(255),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  INDEX idx_settingKey (settingKey)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user NFLXR4X1BqV2Dun.root --database JqENYrGJnDCst7Pbb5cfUV --execute DROP TABLE IF EXISTS siteSettings;\n\nCREATE TABLE siteSettings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  settingKey VARCHAR(100) NOT NULL UNIQUE,\n  settingValue TEXT,\n  imageUrl TEXT,\n  imageKey VARCHAR(255),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  INDEX idx_settingKey (settingKey)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 644
+}

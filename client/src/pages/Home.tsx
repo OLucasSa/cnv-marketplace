@@ -12,19 +12,13 @@ import ColorBadges from '@/components/ColorBadges';
 
 // Componente para exibir imagem do banner
 function BannerImageDisplay() {
-  const [bannerImage, setBannerImage] = useState<string | null>(null);
+  // Query para carregar banner do banco
+  const { data: bannerUrl } = trpc.upload.getBannerUrl.useQuery();
 
-  useEffect(() => {
-    const stored = localStorage.getItem('bannerImageUrl');
-    if (stored) {
-      setBannerImage(stored);
-    }
-  }, []);
-
-  if (bannerImage) {
+  if (bannerUrl) {
     return (
       <img
-        src={bannerImage}
+        src={bannerUrl}
         alt="Banner personalizado"
         className="max-w-full max-h-full object-contain"
       />

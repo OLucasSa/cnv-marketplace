@@ -167,3 +167,73 @@ export async function deleteColorPreset(id: number) {
     throw error;
   }
 }
+
+
+// Site Settings functions
+export async function getSiteSetting(settingKey: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get site setting: database not available");
+    return null;
+  }
+
+  try {
+    const { siteSettings } = await import("../drizzle/schema");
+    const result = await db.select().from(siteSettings).where(eq(siteSettings.settingKey, settingKey)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get site setting:", error);
+    return null;
+  }
+}
+
+export async function setSiteSetting(settingKey: string, imageUrl: string, imageKey: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { siteSettings } = await import("../drizzle/schema");
+    
+    // Check if setting exists
+    const existing = await db.select().from(siteSettings).where(eq(siteSettings.settingKey, settingKey)).limit(1);
+    
+    if (existing.length > 0) {
+      // Update existing
+      const result = await db.update(siteSettings).set({
+        imageUrl,
+        imageKey,
+        updatedAt: new Date(),
+      }).where(eq(siteSettings.settingKey, settingKey));
+      return result;
+    } else {
+      // Insert new
+      const result = await db.insert(siteSettings).values({
+        settingKey,
+        imageUrl,
+        imageKey,
+      });
+      return result;
+    }
+  } catch (error) {
+    console.error("[Database] Failed to set site setting:", error);
+    throw error;
+  }
+}
+
+export async function deleteSiteSetting(settingKey: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { siteSettings } = await import("../drizzle/schema");
+    const result = await db.delete(siteSettings).where(eq(siteSettings.settingKey, settingKey));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to delete site setting:", error);
+    throw error;
+  }
+}

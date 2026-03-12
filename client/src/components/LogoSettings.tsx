@@ -1,16 +1,64 @@
-import { useState } from 'react';
-import { Upload, Check, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Upload, Check, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { trpc } from '@/lib/trpc';
 
 export default function LogoSettings() {
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [currentLogo, setCurrentLogo] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('logoUrl');
+  const [currentLogo, setCurrentLogo] = useState<string | null>(null);
+
+  // Query para carregar logo atual do banco
+  const { data: logoUrl } = trpc.upload.getLogoUrl.useQuery();
+
+  // Carregar imagem atual quando mudar
+  useEffect(() => {
+    if (logoUrl) {
+      setCurrentLogo(logoUrl);
     }
-    return null;
+  }, [logoUrl]);
+
+  // Mutation para upload
+  const uploadMutation = trpc.upload.logoImage.useMutation({
+    onSuccess: (result) => {
+      if (result.success) {
+        setCurrentLogo(result.url);
+        setMessage({
+          type: 'success',
+          text: 'Logo atualizado com sucesso! Recarregue a página para ver as mudanças.',
+        });
+        setIsLoading(false);
+
+        // Recarregar página após 1.5 segundos
+        setTimeout(() => window.location.reload(), 1500);
+      }
+    },
+    onError: (error) => {
+      setMessage({
+        type: 'error',
+        text: error.message || 'Erro ao fazer upload da logo',
+      });
+      setIsLoading(false);
+    },
+  });
+
+  // Mutation para remover
+  const removeMutation = trpc.upload.removeLogo.useMutation({
+    onSuccess: () => {
+      setCurrentLogo(null);
+      setMessage({
+        type: 'success',
+        text: 'Logo removida com sucesso!',
+      });
+      setTimeout(() => window.location.reload(), 1500);
+    },
+    onError: (error) => {
+      setMessage({
+        type: 'error',
+        text: error.message || 'Erro ao remover logo',
+      });
+    },
   });
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -63,20 +111,14 @@ export default function LogoSettings() {
     try {
       // Converter arquivo para base64
       const reader = new FileReader();
-      reader.onload = async () => {
+      reader.onload = () => {
         const base64 = reader.result as string;
 
-        // Salvar em localStorage
-        localStorage.setItem('logoUrl', base64);
-        setCurrentLogo(base64);
-
-        setMessage({
-          type: 'success',
-          text: 'Logo atualizado com sucesso! Recarregue a página para ver as mudanças.',
+        // Fazer upload via tRPC
+        uploadMutation.mutate({
+          base64,
+          fileName: file.name,
         });
-
-        // Disparar evento para atualizar componentes
-        window.dispatchEvent(new Event('logoUpdated'));
       };
       reader.readAsDataURL(file);
     } catch (error) {
@@ -84,7 +126,6 @@ export default function LogoSettings() {
         type: 'error',
         text: 'Erro ao fazer upload da logo. Tente novamente.',
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -147,8 +188,8 @@ export default function LogoSettings() {
 
       {/* Preview da Logo Atual */}
       {currentLogo && (
-        <div className="border rounded-lg p-4">
-          <p className="text-sm font-semibold mb-3">Preview da Logo Atual:</p>
+        <div className="border rounded-lg p-4 space-y-3">
+          <p className="text-sm font-semibold">Preview da Logo Atual:</p>
           <div className="flex items-center justify-center bg-gray-100 rounded p-4">
             <img
               src={currentLogo}
@@ -156,6 +197,15 @@ export default function LogoSettings() {
               className="h-16 object-contain"
             />
           </div>
+          <Button
+            onClick={() => removeMutation.mutate()}
+            variant="destructive"
+            disabled={removeMutation.isPending}
+            className="w-full"
+          >
+            <X className="w-4 h-4 mr-2" />
+            {removeMutation.isPending ? 'Removendo...' : 'Remover Logo'}
+          </Button>
         </div>
       )}
 

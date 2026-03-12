@@ -10,20 +10,20 @@ export default function BannerSettings() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  // Carregar imagem atual do localStorage
+  // Query para carregar banner atual do banco
+  const { data: bannerUrl } = trpc.upload.getBannerUrl.useQuery();
+
+  // Carregar imagem atual quando mudar
   useEffect(() => {
-    const stored = localStorage.getItem('bannerImageUrl');
-    if (stored) {
-      setCurrentImage(stored);
+    if (bannerUrl) {
+      setCurrentImage(bannerUrl);
     }
-  }, []);
+  }, [bannerUrl]);
 
   // Mutation para upload
   const uploadMutation = trpc.upload.bannerImage.useMutation({
     onSuccess: (result) => {
       if (result.success) {
-        // Salvar URL em localStorage
-        localStorage.setItem('bannerImageUrl', result.url);
         setCurrentImage(result.url);
         setSuccess(true);
         setError(null);
@@ -37,6 +37,18 @@ export default function BannerSettings() {
     },
     onError: (error) => {
       setError(error.message || 'Erro ao fazer upload');
+    },
+  });
+
+  // Mutation para remover
+  const removeMutation = trpc.upload.removeBanner.useMutation({
+    onSuccess: () => {
+      setCurrentImage(null);
+      setSuccess(false);
+      window.location.reload();
+    },
+    onError: (error) => {
+      setError(error.message || 'Erro ao remover imagem');
     },
   });
 
@@ -111,10 +123,7 @@ export default function BannerSettings() {
   };
 
   const handleRemoveImage = () => {
-    localStorage.removeItem('bannerImageUrl');
-    setCurrentImage(null);
-    setSuccess(false);
-    window.location.reload();
+    removeMutation.mutate();
   };
 
   const triggerFileInput = () => {
@@ -211,10 +220,11 @@ export default function BannerSettings() {
           <Button
             onClick={handleRemoveImage}
             variant="destructive"
+            disabled={removeMutation.isPending}
             className="w-full"
           >
             <X className="w-4 h-4 mr-2" />
-            Remover Imagem
+            {removeMutation.isPending ? 'Removendo...' : 'Remover Imagem'}
           </Button>
         </div>
       )}
