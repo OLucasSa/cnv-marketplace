@@ -105,7 +105,7 @@ export default function ImageLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+      className="fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center"
       onClick={onClose}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -114,7 +114,7 @@ export default function ImageLightbox({
       {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition-colors"
+        className="absolute top-4 right-4 z-[2001] bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition-colors"
         aria-label="Fechar"
       >
         <X className="w-6 h-6" />

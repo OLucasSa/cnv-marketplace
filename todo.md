@@ -357,3 +357,10 @@
 - [x] Adicionar responsividade para mobile (100vw, 100vh, md: breakpoints)
 - [x] Melhorar feedback visual (cursor zoom-in, hover effects)
 - [x] Testar em desktop e mobile (servidor rodando)
+
+
+## 🔧 Correção - Z-index do Lightbox (Concluído)
+- [x] Examinar z-index de ImageLightbox e ProductModal
+- [x] Aumentar z-index do lightbox para 2000+ (z-[2000])
+- [x] Garantir overlay escuro do lightbox tenha z-index alto (z-[2001] para botão)
+- [x] Testar se lightbox abre acima do modal (servidor rodando)
