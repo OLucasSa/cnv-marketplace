@@ -3,7 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { X, Check, ShoppingCart, Info } from 'lucide-react';
 import { useState } from 'react';
-import ImageCarousel from './ImageCarousel';
+import ProductImageGallery from './ProductImageGallery';
+import ImageLightbox from './ImageLightbox';
 import { parseColorIds, COLOR_PALETTE } from '@shared/colors';
 
 interface ProductModalProps {
@@ -15,9 +16,9 @@ interface ProductModalProps {
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Usar useEffect para garantir que o Dialog seja renderizado corretamente
-  // e evitar erros de removeChild
   if (!product) return null;
 
   // Parse images
@@ -33,189 +34,204 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   // Parse colors - handle both string IDs and array formats
   let colors: (typeof COLOR_PALETTE)[number][] = [];
   if (typeof product.colors === 'string') {
-    // Handle string format (e.g., "1,2,3")
     const colorIds = parseColorIds(product.colors);
     colors = colorIds
       .map(id => COLOR_PALETTE.find(c => c.id === id))
       .filter((c): c is (typeof COLOR_PALETTE)[number] => Boolean(c));
   } else if (Array.isArray(product.colors)) {
-    // Handle array format - match by hex code
     colors = product.colors
       .map(c => COLOR_PALETTE.find(p => p.hex === c.hex))
       .filter((c): c is (typeof COLOR_PALETTE)[number] => Boolean(c));
   }
 
+  const handleImageClick = (imageUrl: string) => {
+    const index = images.indexOf(imageUrl);
+    setLightboxIndex(index >= 0 ? index : 0);
+    setLightboxOpen(true);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) {
-        // Pequeno delay para evitar erro de removeChild
-        setTimeout(onClose, 0);
-      }
-    }}>
-      <DialogContent key={product.id} className="max-w-[1400px] max-h-[95vh] overflow-y-auto p-0">
-        {/* Header */}
-        <div className="sticky top-0 z-50 bg-white border-b border-border p-6 flex items-start justify-between">
-          <div className="flex-1">
-            <DialogTitle className="text-4xl font-bold heading mb-2">
-              {product.name}
-            </DialogTitle>
-            <p className="text-sm text-accent uppercase tracking-wider font-semibold">
-              {product.category}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="rounded-full p-2 hover:bg-secondary/20 transition-colors flex-shrink-0"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Main Content - Horizontal Layout for Desktop */}
-        <div className="p-4 md:p-6">
-          {/* Top Section: Images and Quick Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-            {/* Left: Images - Takes 2 columns on desktop */}
-            <div className="lg:col-span-2">
-              <div className="bg-secondary/5 rounded-lg p-6">
-                <ImageCarousel images={images} productName={product.name} />
-              </div>
-            </div>
-
-            {/* Right: Price, Description, and CTA - Takes 2 columns on desktop */}
-            <div className="lg:col-span-2 space-y-3 md:space-y-4">
-              {/* Price */}
-              <div className="bg-accent/10 border-2 border-accent rounded-lg p-4 md:p-6">
-                <p className="text-xs md:text-sm text-muted-foreground mb-1">Preço</p>
-                <p className="text-2xl md:text-3xl font-bold text-accent">
-                  {typeof product.price === 'string' ? product.price : `R$ ${product.price}`}
-                </p>
-              </div>
-
-              {/* Description */}
-              <div className="bg-secondary/5 rounded-lg p-4 md:p-6">
-                <p className="text-xs md:text-sm font-semibold text-foreground mb-2 md:mb-3 flex items-center gap-2">
-                  <Info className="w-4 h-4 text-accent" />
-                  Descrição
-                </p>
-                <p className="text-sm text-foreground leading-relaxed line-clamp-4">
-                  {product.description}
-                </p>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="space-y-2">
-                <Button
-                  onClick={() => {
-                    const message = `Olá! Tenho interesse no produto: ${product.name}${
-                      selectedColor ? ` na cor ${selectedColor}` : ''
-                    }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
-                    const whatsappUrl = `https://wa.me/5566996066814?text=${encodeURIComponent(message)}`;
-                    window.open(whatsappUrl, '_blank');
-                  }}
-                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-base py-5 font-bold flex items-center justify-center gap-2"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Solicitar Orçamento
-                </Button>
-                <Button
-                  onClick={onClose}
-                  variant="outline"
-                  className="w-full py-5"
-                >
-                  Fechar
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Section - Colors and Sizes/Features */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-6 md:pt-8">
-            {/* Colors - Left Column */}
-            <div>
-              <p className="text-base md:text-lg font-bold heading mb-4 flex items-center gap-2">
-                <div className="w-1 h-6 bg-accent rounded-full" />
-                Cores Disponíveis
+    <>
+      <Dialog open={isOpen} onOpenChange={(open) => {
+        if (!open) {
+          setTimeout(onClose, 0);
+        }
+      }}>
+        <DialogContent key={product.id} className="max-w-[1100px] max-h-[85vh] overflow-y-auto p-0 gap-0 md:rounded-lg rounded-none md:max-h-[85vh] max-h-screen md:max-w-[90vw]">
+          {/* Header */}
+          <div className="sticky top-0 z-50 bg-white border-b border-border p-4 md:p-6 flex items-start justify-between">
+            <div className="flex-1">
+              <DialogTitle className="text-2xl md:text-4xl font-bold heading mb-1 md:mb-2">
+                {product.name}
+              </DialogTitle>
+              <p className="text-xs md:text-sm text-accent uppercase tracking-wider font-semibold">
+                {product.category || 'Sem categoria'}
               </p>
-              <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
-                {colors && colors.length > 0 ? (
-                  colors.map((color: typeof COLOR_PALETTE[number]) => (
-                    <button
-                      key={color.hex}
-                      onClick={() => setSelectedColor(color.displayName)}
-                      className={`flex flex-col items-center gap-1 transition-all duration-300 relative group ${'opacity-100'}`}
-                      title={color.displayName}
-                    >
-                      <div
-                        className={`w-10 h-10 rounded-lg border-2 transition-all ${
-                          selectedColor === color.displayName
-                            ? 'border-accent shadow-md ring-2 ring-accent'
-                            : 'border-border hover:border-accent'
-                        }`}
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      {selectedColor === color.displayName && (
-                        <Check className="w-3 h-3 text-accent absolute -top-1 -right-1 bg-white rounded-full" />
-                      )}
-                      <span className="text-[9px] text-center font-medium text-foreground line-clamp-1 hidden group-hover:block absolute -bottom-6 bg-foreground text-background px-2 py-1 rounded whitespace-nowrap z-10">
-                        {color.displayName}
-                      </span>
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground col-span-6">Sem cores</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="rounded-full p-2 hover:bg-secondary/20 transition-colors flex-shrink-0"
+            >
+              <X className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+          </div>
+
+          {/* Main Content - Responsive Layout */}
+          <div className="p-4 md:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6">
+              {/* Left: Images - Takes 3 columns on desktop */}
+              <div className="lg:col-span-3">
+                <ProductImageGallery 
+                  images={images} 
+                  productName={product.name}
+                  onImageClick={handleImageClick}
+                />
+              </div>
+
+              {/* Right: Product Info - Takes 2 columns on desktop */}
+              <div className="lg:col-span-2 space-y-3 md:space-y-4">
+                {/* Price */}
+                <div className="bg-accent/10 border-2 border-accent rounded-lg p-3 md:p-4">
+                  <p className="text-xs md:text-sm text-muted-foreground mb-1">Preço</p>
+                  <p className="text-xl md:text-3xl font-bold text-accent">
+                    {typeof product.price === 'string' ? product.price : `R$ ${product.price}`}
+                  </p>
+                </div>
+
+                {/* Description */}
+                <div className="bg-secondary/5 rounded-lg p-3 md:p-4">
+                  <p className="text-xs md:text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                    <Info className="w-4 h-4 text-accent" />
+                    Descrição
+                  </p>
+                  <p className="text-xs md:text-sm text-foreground leading-relaxed line-clamp-5">
+                    {product.description}
+                  </p>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="space-y-2 pt-2">
+                  <Button
+                    onClick={() => {
+                      const message = `Olá! Tenho interesse no produto: ${product.name}${
+                        selectedColor ? ` na cor ${selectedColor}` : ''
+                      }${selectedSize ? ` no tamanho ${selectedSize}` : ''}. Gostaria de saber mais sobre preços e disponibilidade.`;
+                      const whatsappUrl = `https://wa.me/5566996066814?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                    className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-sm md:text-base py-4 md:py-5 font-bold flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+                    Solicitar Orçamento
+                  </Button>
+                  <Button
+                    onClick={onClose}
+                    variant="outline"
+                    className="w-full py-4 md:py-5 text-sm md:text-base"
+                  >
+                    Fechar
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Section - Colors and Sizes/Features */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 border-t border-border pt-6 md:pt-8 mt-6 md:mt-8">
+              {/* Colors - Left Column */}
+              <div>
+                <p className="text-sm md:text-lg font-bold heading mb-3 md:mb-4 flex items-center gap-2">
+                  <div className="w-1 h-5 md:h-6 bg-accent rounded-full" />
+                  Cores Disponíveis
+                </p>
+                <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
+                  {colors && colors.length > 0 ? (
+                    colors.map((color: typeof COLOR_PALETTE[number]) => (
+                      <button
+                        key={color.hex}
+                        onClick={() => setSelectedColor(color.displayName)}
+                        className={`flex flex-col items-center gap-1 transition-all duration-300 relative group`}
+                        title={color.displayName}
+                      >
+                        <div
+                          className={`w-8 h-8 md:w-10 md:h-10 rounded-lg border-2 transition-all ${
+                            selectedColor === color.displayName
+                              ? 'border-accent shadow-md ring-2 ring-accent'
+                              : 'border-border hover:border-accent'
+                          }`}
+                          style={{ backgroundColor: color.hex }}
+                        />
+                        {selectedColor === color.displayName && (
+                          <Check className="w-3 h-3 text-accent absolute -top-1 -right-1 bg-white rounded-full" />
+                        )}
+                        <span className="text-[9px] text-center font-medium text-foreground line-clamp-1 hidden group-hover:block absolute -bottom-6 bg-foreground text-background px-2 py-1 rounded whitespace-nowrap z-10">
+                          {color.displayName}
+                        </span>
+                      </button>
+                    ))
+                  ) : (
+                    <p className="text-xs md:text-sm text-muted-foreground col-span-6">Sem cores</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Sizes & Features - Right Column */}
+              <div className="space-y-4 md:space-y-6">
+                {/* Sizes */}
+                {hasSizes && (
+                  <div>
+                    <p className="text-sm md:text-lg font-bold heading mb-2 md:mb-3 flex items-center gap-2">
+                      <div className="w-1 h-5 md:h-6 bg-accent rounded-full" />
+                      Tamanhos
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {product.sizes!.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-3 md:px-4 py-2 rounded-lg border-2 transition-all font-semibold text-xs md:text-sm ${
+                            selectedSize === size
+                              ? 'bg-accent text-accent-foreground border-accent'
+                              : 'border-border hover:border-accent text-foreground'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Features */}
+                {product.specifications.features && product.specifications.features.length > 0 && (
+                  <div>
+                    <p className="text-sm md:text-lg font-bold heading mb-2 md:mb-3 flex items-center gap-2">
+                      <div className="w-1 h-5 md:h-6 bg-accent rounded-full" />
+                      Características
+                    </p>
+                    <div className="space-y-2">
+                      {product.specifications.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-2 bg-secondary/5 rounded-lg p-2 md:p-3">
+                          <div className="w-2 h-2 rounded-full bg-accent mt-1 flex-shrink-0" />
+                          <span className="text-xs md:text-sm text-foreground">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
-
-            {/* Sizes & Features - Right Column */}
-            <div className="space-y-6">
-              {/* Sizes */}
-              {hasSizes && (
-                <div>
-                  <p className="text-base md:text-lg font-bold heading mb-3 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-accent rounded-full" />
-                    Tamanhos
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {product.sizes!.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`px-4 py-2 rounded-lg border-2 transition-all font-semibold text-sm ${
-                          selectedSize === size
-                            ? 'bg-accent text-accent-foreground border-accent'
-                            : 'border-border hover:border-accent text-foreground'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Features */}
-              {product.specifications.features && product.specifications.features.length > 0 && (
-                <div>
-                  <p className="text-base md:text-lg font-bold heading mb-3 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-accent rounded-full" />
-                    Características
-                  </p>
-                  <div className="space-y-2">
-                    {product.specifications.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-2 bg-secondary/5 rounded-lg p-3">
-                        <div className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
-                        <span className="text-sm text-foreground">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {/* Lightbox */}
+      <ImageLightbox
+        images={images}
+        initialIndex={lightboxIndex}
+        productName={product.name}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
+    </>
   );
 }

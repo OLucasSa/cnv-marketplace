@@ -347,3 +347,13 @@
 - [x] Corrigir envio de categoryId no handleSubmit (remover linha que deletava categoryId)
 - [x] Testar filtro de categorias no marketplace
 - [x] Testar edição de produtos com categoria
+
+
+## 🎨 Melhorias - Modal de Detalhes do Produto (Concluído)
+- [x] Examinar ProductModal atual
+- [x] Criar ProductImageGallery com miniaturas (ProductImageGallery.tsx)
+- [x] Implementar visualizador fullscreen (lightbox) (ImageLightbox.tsx)
+- [x] Refatorar ProductModal com layout lado-a-lado (ProductModal.tsx)
+- [x] Adicionar responsividade para mobile (100vw, 100vh, md: breakpoints)
+- [x] Melhorar feedback visual (cursor zoom-in, hover effects)
+- [x] Testar em desktop e mobile (servidor rodando)
