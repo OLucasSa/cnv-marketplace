@@ -286,3 +286,15 @@
 - [x] Criar testes vitest para validar funcionalidade (6 testes passando)
 - [x] Validar que imagens persistem no banco de dados
 - [x] Validar que imagens são visíveis para todos os usuários
+
+
+## 🏷️ Sistema de Categorias Gerenciáveis (Concluído)
+- [x] Criar tabela categories no banco de dados
+- [x] Adicionar campo category_id na tabela products
+- [x] Criar endpoints tRPC para CRUD de categorias
+- [x] Criar página de gerenciamento de categorias no admin (CategoryManager.tsx)
+- [x] Atualizar dropdown de categorias no formulário de produtos (ProductForm.tsx)
+- [x] Atualizar filtro de categorias no marketplace (Home.tsx)
+- [x] Implementar lógica de exclusão com atualização de produtos (db.ts)
+- [x] Criar testes vitest para categorias (9 testes passando)
+- [x] Validar compatibilidade com produtos existentes

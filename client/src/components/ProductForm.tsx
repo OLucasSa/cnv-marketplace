@@ -16,13 +16,14 @@ interface ProductFormProps {
   onCancel: () => void;
 }
 
-const categories = [
-  "Canecas de Alumínio",
-  "Linha Premium",
-  "Porcelanas",
-  "Vidros",
-  "Acrílicos",
-];
+// Categorias carregadas da API
+// const categories = [
+//   "Canecas de Alumínio",
+//   "Linha Premium",
+//   "Porcelanas",
+//   "Vidros",
+//   "Acrílicos",
+// ];
 
 export default function ProductForm({ productId, onSuccess, onCancel }: ProductFormProps) {
   const [formData, setFormData] = useState({
@@ -61,6 +62,9 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
   const { data: product } = trpc.products.getById.useQuery(productId || 0, {
     enabled: !!productId,
   });
+
+  // Carregar categorias da API
+  const { data: categories = [] } = trpc.categories.listAll.useQuery();
 
   // Initialize form data only once when product loads
   useEffect(() => {
@@ -134,8 +138,8 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
             </SelectTrigger>
             <SelectContent>
               {categories.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
+                <SelectItem key={cat.id} value={cat.name}>
+                  {cat.name}
                 </SelectItem>
               ))}
             </SelectContent>

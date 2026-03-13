@@ -237,3 +237,110 @@ export async function deleteSiteSetting(settingKey: string) {
     throw error;
   }
 }
+
+
+// Categories functions
+export async function getAllCategories(visibleOnly = false) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get categories: database not available");
+    return [];
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    
+    if (visibleOnly) {
+      const result = await db.select().from(categories).where(eq(categories.visible, 1)).orderBy(categories.createdAt);
+      return result;
+    } else {
+      const result = await db.select().from(categories).orderBy(categories.createdAt);
+      return result;
+    }
+  } catch (error) {
+    console.error("[Database] Failed to get categories:", error);
+    return [];
+  }
+}
+
+export async function getCategoryById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get category: database not available");
+    return null;
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get category:", error);
+    return null;
+  }
+}
+
+export async function createCategory(name: string, slug: string, visible = true) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    const result = await db.insert(categories).values({
+      name,
+      slug,
+      visible: visible ? 1 : 0,
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create category:", error);
+    throw error;
+  }
+}
+
+export async function updateCategory(id: number, name: string, slug: string, visible: boolean) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    const result = await db.update(categories).set({
+      name,
+      slug,
+      visible: visible ? 1 : 0,
+      updatedAt: new Date(),
+    }).where(eq(categories.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to update category:", error);
+    throw error;
+  }
+}
+
+export async function deleteCategory(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { categories, products } = await import("../drizzle/schema");
+    
+    // Set categoryId to NULL for all products in this category
+    await db.update(products).set({
+      categoryId: null,
+      updatedAt: new Date(),
+    }).where(eq(products.categoryId, id));
+
+    // Delete the category
+    const result = await db.delete(categories).where(eq(categories.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to delete category:", error);
+    throw error;
+  }
+}

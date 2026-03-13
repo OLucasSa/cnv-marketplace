@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
-import { categories } from '@/lib/products';
+// import { categories } from '@/lib/products';
 import type { Product } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import ProductModal from '@/components/ProductModal';
@@ -39,6 +39,22 @@ export default function Home() {
 
   // Buscar produtos do banco de dados via tRPC
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
+
+  // Carregar categorias visíveis da API
+  const { data: dbCategories = [] } = trpc.categories.list.useQuery();
+
+  // Extrair nomes únicos de categorias dos produtos para compatibilidade com produtos antigos
+  const uniqueProductCategories = Array.from(
+    new Set(products.map((p) => p.category).filter(Boolean))
+  );
+
+  // Combinar categorias do banco com categorias dos produtos (para compatibilidade)
+  const allCategories = Array.from(
+    new Set([
+      ...dbCategories.map((c) => c.name),
+      ...uniqueProductCategories,
+    ])
+  ).sort();
 
   const filteredProducts =
     selectedCategory === 'all'
@@ -162,7 +178,7 @@ export default function Home() {
               <TabsTrigger value="all" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
                 Todos
               </TabsTrigger>
-              {categories.map((category) => (
+              {allCategories.map((category) => (
                 <TabsTrigger
                   key={category}
                   value={category}

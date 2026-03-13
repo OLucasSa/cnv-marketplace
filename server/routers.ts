@@ -6,6 +6,7 @@ import { z } from "zod";
 import * as productHelpers from "./products";
 import * as userHelpers from "./users";
 import { uploadRouter } from "./routers/upload";
+import { categoriesRouter } from "./routers/categories";
 import * as dbHelpers from "./db";
 
 export const appRouter = router({
@@ -114,6 +115,7 @@ export const appRouter = router({
   }),
 
   upload: uploadRouter,
+  categories: categoriesRouter,
 });
 
 export type AppRouter = typeof appRouter;
