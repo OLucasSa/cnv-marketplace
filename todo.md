@@ -314,3 +314,10 @@
 - [x] Remover campo slug do formulário e banco de dados
 - [x] Garantir atualização automática de dados após CRUD (invalidação de caches)
 - [x] Testar funcionalidade completa
+
+
+## 🔐 Correção - Autenticação de Categorias (Concluído)
+- [x] Verificar como chave admin é passada do frontend
+- [x] Corrigir adminSimpleProcedure para extrair chave corretamente (header x-admin-key)
+- [x] Atualizar endpoints de categorias para usar adminSimpleProcedure
+- [x] Integrar chave admin no cliente tRPC (main.tsx)

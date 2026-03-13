@@ -37,15 +37,27 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
+// Extrair chave admin da URL
+const urlParams = new URLSearchParams(window.location.search);
+const adminKey = urlParams.get('key');
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
+        const headers = new Headers(init?.headers || {});
+        
+        // Adicionar header x-admin-key se chave estiver presente
+        if (adminKey) {
+          headers.set('x-admin-key', adminKey);
+        }
+        
         return globalThis.fetch(input, {
           ...(init ?? {}),
           credentials: "include",
+          headers,
         });
       },
     }),
