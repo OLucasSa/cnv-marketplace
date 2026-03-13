@@ -99,13 +99,21 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     setIsLoading(true);
 
     try {
-      // Preparar dados para envio (remover categoryId vazio e usar category para compatibilidade)
+      // Preparar dados para envio
+      const categoryIdNumber = formData.categoryId ? parseInt(formData.categoryId) : undefined;
       const dataToSend = {
-        ...formData,
-        // Manter category vazio se categoryId for vazio (compatibilidade)
-        category: formData.category || "",
+        name: formData.name,
+        description: formData.description,
+        categoryId: categoryIdNumber,
+        price: formData.price,
+        stock: formData.stock,
+        imageUrl: formData.imageUrl,
+        colors: formData.colors,
+        sizes: formData.sizes,
+        specifications: formData.specifications,
+        features: formData.features,
+        status: formData.status,
       };
-      delete (dataToSend as any).categoryId; // Remover categoryId do envio
 
       if (productId) {
         await updateMutation.mutateAsync({

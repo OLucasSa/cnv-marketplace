@@ -339,3 +339,11 @@
 - [x] Atualizar CategoryManager para editar order e featured
 - [x] Atualizar Home.tsx para exibir contagem de produtos nas abas
 - [x] Criar testes vitest para novas funcionalidades (categories-improvements.test.ts)
+
+
+## 🔧 Correção - Integração Produto-Categoria (Concluído)
+- [x] Corrigir filtro de produtos em Home.tsx para usar category_id (já estava correto)
+- [x] Corrigir preenchimento automático de category_id em ProductForm (já estava correto)
+- [x] Corrigir envio de categoryId no handleSubmit (remover linha que deletava categoryId)
+- [x] Testar filtro de categorias no marketplace
+- [x] Testar edição de produtos com categoria
