@@ -31,7 +31,7 @@ export const appRouter = router({
       .input(z.object({
         name: z.string().min(1),
         description: z.string().optional(),
-        category: z.string().min(1),
+        categoryId: z.number().optional(),
         price: z.string().min(1),
         stock: z.number().int().min(0),
         imageUrl: z.string().optional(),
@@ -47,7 +47,7 @@ export const appRouter = router({
         id: z.number(),
         name: z.string().optional(),
         description: z.string().optional(),
-        category: z.string().optional(),
+        categoryId: z.number().optional(),
         price: z.string().optional(),
         stock: z.number().int().optional(),
         imageUrl: z.string().optional(),

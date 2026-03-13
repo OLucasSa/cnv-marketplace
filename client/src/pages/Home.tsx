@@ -35,7 +35,7 @@ function BannerImageDisplay() {
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null); // Usar ID em vez de nome
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null); // Usar ID em vez de nome
 
   // Buscar produtos do banco de dados via tRPC
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -49,8 +49,8 @@ export default function Home() {
       ? products // "Todos" - mostrar todos os produtos
       : products.filter((p) => {
           // Filtrar por categoryId se disponível
-          if (p.categoryId) {
-            return p.categoryId === parseInt(selectedCategoryId);
+          if (p.categoryId !== null && p.categoryId !== undefined) {
+            return Number(p.categoryId) === Number(selectedCategoryId);
           }
           // Fallback para compatibilidade com produtos antigos (sem categoryId)
           return false;
@@ -165,7 +165,7 @@ export default function Home() {
 
           {/* Category Tabs */}
           <Tabs
-            value={selectedCategoryId === null ? 'all' : selectedCategoryId}
+            value={selectedCategoryId === null ? 'all' : String(selectedCategoryId)}
             className="mb-12"
           >
             <TabsList className="bg-secondary/10 border border-border">
@@ -180,7 +180,7 @@ export default function Home() {
                 <TabsTrigger
                   key={category.id}
                   value={String(category.id)}
-                  onClick={() => setSelectedCategoryId(String(category.id))}
+                  onClick={() => setSelectedCategoryId(Number(category.id))}
                   className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
                 >
                   {category.name}
@@ -189,7 +189,7 @@ export default function Home() {
             </TabsList>
 
             {/* Products Grid */}
-            <TabsContent value={selectedCategoryId === null ? 'all' : selectedCategoryId} className="mt-8">
+            <TabsContent value={selectedCategoryId === null ? 'all' : String(selectedCategoryId)} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product, idx) => {
                   const productData = {

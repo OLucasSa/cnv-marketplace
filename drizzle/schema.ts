@@ -32,7 +32,7 @@ export const products = mysqlTable("products", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
-  category: varchar("category", { length: 100 }).notNull(),
+  category: varchar("category", { length: 100 }),
   categoryId: int("categoryId"),
   price: varchar("price", { length: 50 }).notNull(),
   stock: int("stock").default(0).notNull(),

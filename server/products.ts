@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { products } from "../drizzle/schema";
 import { getDb } from "./db";
 
@@ -24,7 +24,7 @@ export async function getActiveProducts() {
 export async function createProduct(data: {
   name: string;
   description?: string;
-  category: string;
+  categoryId?: number | null;
   price: string;
   stock: number;
   imageUrl?: string;
@@ -43,7 +43,7 @@ export async function createProduct(data: {
 export async function updateProduct(id: number, data: Partial<{
   name?: string;
   description?: string;
-  category?: string;
+  categoryId?: number | null;
   price?: string;
   stock?: number;
   imageUrl?: string;

@@ -321,3 +321,11 @@
 - [x] Corrigir adminSimpleProcedure para extrair chave corretamente (header x-admin-key)
 - [x] Atualizar endpoints de categorias para usar adminSimpleProcedure
 - [x] Integrar chave admin no cliente tRPC (main.tsx)
+
+
+## 🔧 Correção - Filtro de Categorias no Marketplace (Concluído)
+- [x] Verificar como produtos são retornados pela API
+- [x] Verificar lógica de filtro em Home.tsx
+- [x] Corrigir comparação para usar category_id (Number)
+- [x] Garantir conversão de tipos (Number)
+- [x] Testar filtro de categorias
