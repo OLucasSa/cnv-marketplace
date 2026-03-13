@@ -7,6 +7,8 @@ import { Eye, EyeOff, Edit2, Trash2, Plus, Check, X } from 'lucide-react';
 interface CategoryForm {
   name: string;
   visible: boolean;
+  order?: number;
+  featured?: boolean;
 }
 
 export default function CategoryManager() {
@@ -14,6 +16,8 @@ export default function CategoryManager() {
   const [formData, setFormData] = useState<CategoryForm>({
     name: '',
     visible: true,
+    order: 0,
+    featured: false,
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -96,12 +100,14 @@ export default function CategoryManager() {
     setFormData({
       name: category.name,
       visible: category.visible === 1,
+      order: category.order || 0,
+      featured: category.featured === 1,
     });
   };
 
   const handleCancel = () => {
     setEditingId(null);
-    setFormData({ name: '', visible: true });
+    setFormData({ name: '', visible: true, order: 0, featured: false });
     setError(null);
   };
 
@@ -151,6 +157,20 @@ export default function CategoryManager() {
           />
         </div>
 
+        <div>
+          <label className="block text-sm font-semibold text-foreground mb-2">
+            Ordem de Exibição
+          </label>
+          <Input
+            type="number"
+            value={formData.order || 0}
+            onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+            placeholder="0"
+            disabled={createMutation.isPending || updateMutation.isPending}
+          />
+          <p className="text-xs text-muted-foreground mt-1">Números menores aparecem primeiro</p>
+        </div>
+
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
@@ -162,6 +182,20 @@ export default function CategoryManager() {
           />
           <label htmlFor="visible" className="text-sm font-medium text-foreground cursor-pointer">
             Visível no marketplace
+          </label>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="featured"
+            checked={formData.featured || false}
+            onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+            disabled={createMutation.isPending || updateMutation.isPending}
+            className="w-4 h-4 rounded border-border"
+          />
+          <label htmlFor="featured" className="text-sm font-medium text-foreground cursor-pointer">
+            Destacar categoria
           </label>
         </div>
 
@@ -200,7 +234,10 @@ export default function CategoryManager() {
                 <div className="flex-1">
                   <p className="font-medium text-foreground">{category.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {category.visible === 1 ? '✓ Visível' : '✗ Oculta'}
+                    {category.visible === 1 ? '✓ Visível' : '✗ Oculta'} {category.featured === 1 ? '⭐ Destacada' : ''}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {category.productCount} produto{category.productCount !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

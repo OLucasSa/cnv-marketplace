@@ -184,6 +184,11 @@ export default function Home() {
                   className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
                 >
                   {category.name}
+                  {category.productCount > 0 && (
+                    <span className="ml-2 text-xs bg-secondary/50 px-2 py-0.5 rounded-full">
+                      {category.productCount}
+                    </span>
+                  )}
                 </TabsTrigger>
               ))}
             </TabsList>

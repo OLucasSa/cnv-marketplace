@@ -329,3 +329,13 @@
 - [x] Corrigir comparação para usar category_id (Number)
 - [x] Garantir conversão de tipos (Number)
 - [x] Testar filtro de categorias
+
+
+## ✨ Melhorias - Sistema de Categorias (Concluído)
+- [x] Adicionar campos order e featured na tabela categories
+- [x] Atualizar schema.ts com novos campos
+- [x] Criar função que retorna categorias com contagem de produtos (getCategoriesWithProductCount)
+- [x] Atualizar endpoints tRPC para ORDER BY order e product_count
+- [x] Atualizar CategoryManager para editar order e featured
+- [x] Atualizar Home.tsx para exibir contagem de produtos nas abas
+- [x] Criar testes vitest para novas funcionalidades (categories-improvements.test.ts)

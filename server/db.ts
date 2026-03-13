@@ -342,3 +342,79 @@ export async function deleteCategory(id: number) {
     throw error;
   }
 }
+
+
+export async function getCategoriesWithProductCount(visibleOnly = true) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get categories: database not available");
+    return [];
+  }
+
+  try {
+    const { categories, products } = await import("../drizzle/schema");
+    const { countDistinct } = await import("drizzle-orm");
+    
+    const result = await db.select({
+      id: categories.id,
+      name: categories.name,
+      visible: categories.visible,
+      order: categories.order,
+      featured: categories.featured,
+      createdAt: categories.createdAt,
+      updatedAt: categories.updatedAt,
+      productCount: countDistinct(products.id),
+    })
+    .from(categories)
+    .leftJoin(products, eq(products.categoryId, categories.id))
+    .groupBy(categories.id)
+    .where(visibleOnly ? eq(categories.visible, 1) : undefined)
+    .orderBy(categories.order);
+
+    return result.map(row => ({
+      ...row,
+      productCount: row.productCount || 0,
+    }));
+  } catch (error) {
+    console.error("[Database] Failed to get categories with product count:", error);
+    return [];
+  }
+}
+
+export async function updateCategoryOrder(id: number, order: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    const result = await db.update(categories).set({
+      order,
+      updatedAt: new Date(),
+    }).where(eq(categories.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to update category order:", error);
+    throw error;
+  }
+}
+
+export async function updateCategoryFeatured(id: number, featured: boolean) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const { categories } = await import("../drizzle/schema");
+    const result = await db.update(categories).set({
+      featured: featured ? 1 : 0,
+      updatedAt: new Date(),
+    }).where(eq(categories.id, id));
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to update category featured:", error);
+    throw error;
+  }
+}

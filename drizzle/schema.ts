@@ -136,6 +136,8 @@ export const categories = mysqlTable("categories", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
   visible: tinyint("visible").default(1).notNull(), // 1 = visible, 0 = hidden
+  order: int("order").default(0).notNull(), // Ordenacao manual das categorias
+  featured: tinyint("featured").default(0).notNull(), // 1 = destacada, 0 = normal
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
