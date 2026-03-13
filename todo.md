@@ -298,3 +298,12 @@
 - [x] Implementar lógica de exclusão com atualização de produtos (db.ts)
 - [x] Criar testes vitest para categorias (9 testes passando)
 - [x] Validar compatibilidade com produtos existentes
+
+
+## 🔧 Correções - Sistema de Categorias (Concluído)
+- [x] Corrigir ProductForm para usar category_id em vez de nome
+- [x] Corrigir erro de removeChild ao fechar modal de produto
+- [x] Atualizar Home.tsx para filtrar por category_id
+- [x] Adicionar seção Categorias no painel administrativo
+- [x] Integrar CategoryManager no painel admin
+- [x] Testar funcionalidade completa

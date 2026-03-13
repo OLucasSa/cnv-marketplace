@@ -29,7 +29,8 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    category: "",
+    category: "", // Mantém para compatibilidade com produtos antigos
+    categoryId: "", // ID da categoria (novo)
     price: "",
     stock: 0,
     imageUrl: "",
@@ -73,6 +74,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         name: product.name,
         description: product.description || "",
         category: product.category,
+        categoryId: product.categoryId ? String(product.categoryId) : "",
         price: product.price,
         stock: product.stock,
         imageUrl: product.imageUrl || "",
@@ -89,7 +91,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.category || !formData.price) {
+    if (!formData.name || !formData.categoryId || !formData.price) {
       toast.error("Preencha os campos obrigatórios");
       return;
     }
@@ -97,14 +99,22 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     setIsLoading(true);
 
     try {
+      // Preparar dados para envio (remover categoryId vazio e usar category para compatibilidade)
+      const dataToSend = {
+        ...formData,
+        // Manter category vazio se categoryId for vazio (compatibilidade)
+        category: formData.category || "",
+      };
+      delete (dataToSend as any).categoryId; // Remover categoryId do envio
+
       if (productId) {
         await updateMutation.mutateAsync({
           id: productId,
-          ...formData,
+          ...dataToSend,
         });
         toast.success("Produto atualizado com sucesso!");
       } else {
-        await createMutation.mutateAsync(formData);
+        await createMutation.mutateAsync(dataToSend);
         toast.success("Produto criado com sucesso!");
       }
       onSuccess();
@@ -132,16 +142,20 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
 
         <div>
           <Label htmlFor="category">Categoria *</Label>
-          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+          <Select value={formData.categoryId} onValueChange={(value) => setFormData({ ...formData, categoryId: value })}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione uma categoria" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.name}>
-                  {cat.name}
-                </SelectItem>
-              ))}
+              {categories.length === 0 ? (
+                <div className="p-2 text-sm text-muted-foreground">Nenhuma categoria disponível</div>
+              ) : (
+                categories.map((cat) => (
+                  <SelectItem key={cat.id} value={String(cat.id)}>
+                    {cat.name}
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
         </div>

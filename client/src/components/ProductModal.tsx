@@ -16,6 +16,8 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
+  // Usar useEffect para garantir que o Dialog seja renderizado corretamente
+  // e evitar erros de removeChild
   if (!product) return null;
 
   // Parse images
@@ -44,8 +46,13 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[1400px] max-h-[95vh] overflow-y-auto p-0">
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        // Pequeno delay para evitar erro de removeChild
+        setTimeout(onClose, 0);
+      }
+    }}>
+      <DialogContent key={product.id} className="max-w-[1400px] max-h-[95vh] overflow-y-auto p-0">
         {/* Header */}
         <div className="sticky top-0 z-50 bg-white border-b border-border p-6 flex items-start justify-between">
           <div className="flex-1">

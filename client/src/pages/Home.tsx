@@ -35,7 +35,7 @@ function BannerImageDisplay() {
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null); // Usar ID em vez de nome
 
   // Buscar produtos do banco de dados via tRPC
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -43,23 +43,18 @@ export default function Home() {
   // Carregar categorias visíveis da API
   const { data: dbCategories = [] } = trpc.categories.list.useQuery();
 
-  // Extrair nomes únicos de categorias dos produtos para compatibilidade com produtos antigos
-  const uniqueProductCategories = Array.from(
-    new Set(products.map((p) => p.category).filter(Boolean))
-  );
-
-  // Combinar categorias do banco com categorias dos produtos (para compatibilidade)
-  const allCategories = Array.from(
-    new Set([
-      ...dbCategories.map((c) => c.name),
-      ...uniqueProductCategories,
-    ])
-  ).sort();
-
+  // Filtrar produtos baseado no selectedCategoryId
   const filteredProducts =
-    selectedCategory === 'all'
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
+    selectedCategoryId === null
+      ? products // "Todos" - mostrar todos os produtos
+      : products.filter((p) => {
+          // Filtrar por categoryId se disponível
+          if (p.categoryId) {
+            return p.categoryId === parseInt(selectedCategoryId);
+          }
+          // Fallback para compatibilidade com produtos antigos (sem categoryId)
+          return false;
+        });
 
   const handleViewDetails = (product: Product) => {
     setSelectedProduct(product);
@@ -118,7 +113,7 @@ export default function Home() {
             </div>
             <div className="flex gap-4">
               <Button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => setSelectedCategoryId(null)}
                 className="bg-accent text-accent-foreground hover:bg-accent/90"
               >
                 Explorar Catálogo
@@ -170,27 +165,31 @@ export default function Home() {
 
           {/* Category Tabs */}
           <Tabs
-            value={selectedCategory}
-            onValueChange={setSelectedCategory}
+            value={selectedCategoryId === null ? 'all' : selectedCategoryId}
             className="mb-12"
           >
             <TabsList className="bg-secondary/10 border border-border">
-              <TabsTrigger value="all" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              <TabsTrigger 
+                value="all" 
+                onClick={() => setSelectedCategoryId(null)}
+                className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
+              >
                 Todos
               </TabsTrigger>
-              {allCategories.map((category) => (
+              {dbCategories.map((category) => (
                 <TabsTrigger
-                  key={category}
-                  value={category}
+                  key={category.id}
+                  value={String(category.id)}
+                  onClick={() => setSelectedCategoryId(String(category.id))}
                   className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
                 >
-                  {category}
+                  {category.name}
                 </TabsTrigger>
               ))}
             </TabsList>
 
             {/* Products Grid */}
-            <TabsContent value={selectedCategory} className="mt-8">
+            <TabsContent value={selectedCategoryId === null ? 'all' : selectedCategoryId} className="mt-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product, idx) => {
                   const productData = {

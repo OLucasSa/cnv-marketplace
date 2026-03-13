@@ -14,6 +14,7 @@ import ProductForm from "@/components/ProductForm";
 import BannerSettings from "@/components/BannerSettings";
 import LogoSettings from "@/components/LogoSettings";
 import ColorPresetsManager from "@/components/ColorPresetsManager";
+import CategoryManager from "@/components/CategoryManager";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -107,6 +108,9 @@ export default function Admin() {
             <TabsTrigger value="produtos" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Produtos
             </TabsTrigger>
+            <TabsTrigger value="categorias" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              Categorias
+            </TabsTrigger>
             <TabsTrigger value="banner" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Banner
             </TabsTrigger>
@@ -117,6 +121,11 @@ export default function Admin() {
               Presets de Cores
             </TabsTrigger>
           </TabsList>
+
+          {/* Categories Tab */}
+          <TabsContent value="categorias" className="space-y-6">
+            <CategoryManager />
+          </TabsContent>
 
           {/* Products Tab */}
           <TabsContent value="produtos" className="space-y-6">
