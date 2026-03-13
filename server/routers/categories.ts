@@ -1,4 +1,4 @@
-import { adminProcedure, publicProcedure, router } from "../_core/trpc";
+import { adminSimpleProcedure, publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import * as dbHelpers from "../db";
 
@@ -9,7 +9,7 @@ export const categoriesRouter = router({
   }),
 
   // Get all categories including hidden (admin only)
-  listAll: adminProcedure.query(async () => {
+  listAll: adminSimpleProcedure.query(async () => {
     return await dbHelpers.getAllCategories(false);
   }),
 
@@ -21,15 +21,14 @@ export const categoriesRouter = router({
     }),
 
   // Create category (admin only)
-  create: adminProcedure
+  create: adminSimpleProcedure
     .input(z.object({
       name: z.string().min(1, "Nome é obrigatório"),
-      slug: z.string().min(1, "Slug é obrigatório"),
       visible: z.boolean().default(true),
     }))
     .mutation(async ({ input }) => {
       try {
-        const result = await dbHelpers.createCategory(input.name, input.slug, input.visible);
+        const result = await dbHelpers.createCategory(input.name, input.visible);
         return {
           success: true,
           message: "Categoria criada com sucesso",
@@ -41,16 +40,15 @@ export const categoriesRouter = router({
     }),
 
   // Update category (admin only)
-  update: adminProcedure
+  update: adminSimpleProcedure
     .input(z.object({
       id: z.number(),
       name: z.string().min(1, "Nome é obrigatório"),
-      slug: z.string().min(1, "Slug é obrigatório"),
       visible: z.boolean(),
     }))
     .mutation(async ({ input }) => {
       try {
-        const result = await dbHelpers.updateCategory(input.id, input.name, input.slug, input.visible);
+        const result = await dbHelpers.updateCategory(input.id, input.name, input.visible);
         return {
           success: true,
           message: "Categoria atualizada com sucesso",
@@ -62,7 +60,7 @@ export const categoriesRouter = router({
     }),
 
   // Delete category (admin only)
-  delete: adminProcedure
+  delete: adminSimpleProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       try {

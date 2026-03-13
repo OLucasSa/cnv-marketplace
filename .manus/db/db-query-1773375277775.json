@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE categories DROP COLUMN slug;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user NFLXR4X1BqV2Dun.root --database JqENYrGJnDCst7Pbb5cfUV --execute ALTER TABLE categories DROP COLUMN slug;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1135
+}

@@ -307,3 +307,10 @@
 - [x] Adicionar seção Categorias no painel administrativo
 - [x] Integrar CategoryManager no painel admin
 - [x] Testar funcionalidade completa
+
+
+## 🔧 Problemas - Sistema de Categorias (Concluído)
+- [x] Corrigir autenticação de endpoints de categorias (adminSimpleProcedure)
+- [x] Remover campo slug do formulário e banco de dados
+- [x] Garantir atualização automática de dados após CRUD (invalidação de caches)
+- [x] Testar funcionalidade completa

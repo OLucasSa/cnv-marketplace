@@ -280,7 +280,7 @@ export async function getCategoryById(id: number) {
   }
 }
 
-export async function createCategory(name: string, slug: string, visible = true) {
+export async function createCategory(name: string, visible = true) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
@@ -290,7 +290,6 @@ export async function createCategory(name: string, slug: string, visible = true)
     const { categories } = await import("../drizzle/schema");
     const result = await db.insert(categories).values({
       name,
-      slug,
       visible: visible ? 1 : 0,
     });
     return result;
@@ -300,7 +299,7 @@ export async function createCategory(name: string, slug: string, visible = true)
   }
 }
 
-export async function updateCategory(id: number, name: string, slug: string, visible: boolean) {
+export async function updateCategory(id: number, name: string, visible: boolean) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
@@ -310,7 +309,6 @@ export async function updateCategory(id: number, name: string, slug: string, vis
     const { categories } = await import("../drizzle/schema");
     const result = await db.update(categories).set({
       name,
-      slug,
       visible: visible ? 1 : 0,
       updatedAt: new Date(),
     }).where(eq(categories.id, id));
