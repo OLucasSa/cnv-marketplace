@@ -7,8 +7,10 @@ import ProductModal from '@/components/ProductModal';
 import LogoDisplay from '@/components/LogoDisplay';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShoppingCart } from 'lucide-react';
 import ColorBadges from '@/components/ColorBadges';
+import { useCart } from '@/contexts/CartContext';
+import CartPanel from '@/components/CartPanel';
 
 // Componente para exibir imagem do banner
 function BannerImageDisplay() {
@@ -36,6 +38,9 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null); // Usar ID em vez de nome
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { getTotalItems } = useCart();
+  const totalItems = getTotalItems();
 
   // Buscar produtos do banco de dados via tRPC
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -82,6 +87,19 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary/10 transition-colors"
+              title="Carrinho de compras"
+            >
+              <ShoppingCart className="w-5 h-5 text-accent" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+              <span className="text-sm font-medium text-foreground hidden sm:inline">Carrinho</span>
+            </button>
             <a
               href="https://wa.me/5566996066814"
               target="_blank"
@@ -92,6 +110,9 @@ export default function Home() {
             </a>
             <span className="text-xs text-muted-foreground">Sinop-MT</span>
           </div>
+
+          {/* Cart Panel */}
+          {isCartOpen && <CartPanel onClose={() => setIsCartOpen(false)} />}
         </div>
       </header>
 

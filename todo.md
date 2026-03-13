@@ -364,3 +364,30 @@
 - [x] Aumentar z-index do lightbox para 2000+ (z-[2000])
 - [x] Garantir overlay escuro do lightbox tenha z-index alto (z-[2001] para botão)
 - [x] Testar se lightbox abre acima do modal (servidor rodando)
+
+
+## 🛒 Novo - Sistema de Carrinho de Compras
+- [ ] Criar CartContext com localStorage
+- [ ] Adicionar seletor de quantidade no modal
+- [ ] Adicionar botão "Adicionar ao Carrinho"
+- [ ] Adicionar ícone de carrinho no header
+- [ ] Criar painel/modal de carrinho
+- [ ] Implementar alteração de quantidade no carrinho
+- [ ] Implementar "Solicitar Orçamento" do carrinho
+- [ ] Testar compatibilidade com funcionalidades existentes
+
+
+## Sistema de Carrinho de Compras (Concluído)
+- [x] Criar CartContext com localStorage para persistência
+- [x] Implementar funcionalidades: adicionar, remover, atualizar quantidade
+- [x] Adicionar CartProvider em main.tsx
+- [x] Integrar ProductModal com seletor de quantidade
+- [x] Adicionar ícone de carrinho no header com contador
+- [x] Criar CartPanel com lista de itens
+- [x] Implementar controles de quantidade (+ e -)
+- [x] Implementar botão remover item
+- [x] Implementar "Solicitar Orçamento em Lote" com WhatsApp
+- [x] Testar adicionar/remover itens
+- [x] Testar persistência em localStorage
+- [x] Testar painel lateral do carrinho
+- [x] Validar responsividade em mobile e desktop

@@ -1,8 +1,8 @@
-import { Product } from '@/lib/products';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, Check, ShoppingCart, Info } from 'lucide-react';
+import { X, Check, ShoppingCart, Info, Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
 import ProductImageGallery from './ProductImageGallery';
 import ImageLightbox from './ImageLightbox';
 import { parseColorIds, COLOR_PALETTE } from '@shared/colors';
@@ -16,8 +16,11 @@ interface ProductModalProps {
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addItem } = useCart();
 
   if (!product) return null;
 
@@ -48,6 +51,30 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     const index = images.indexOf(imageUrl);
     setLightboxIndex(index >= 0 ? index : 0);
     setLightboxOpen(true);
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedColor) {
+      alert('Por favor, selecione uma cor');
+      return;
+    }
+
+    addItem({
+      productId: product.id,
+      productName: product.name,
+      image: images[0] || '',
+      color: selectedColor,
+      quantity,
+      price: typeof product.price === 'number' ? product.price : undefined,
+    });
+
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 1;
+    setQuantity(Math.max(1, value));
   };
 
   return (
@@ -109,8 +136,50 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                   </p>
                 </div>
 
+                {/* Quantity Selector */}
+                <div className="bg-secondary/5 rounded-lg p-3 md:p-4">
+                  <p className="text-xs md:text-sm font-semibold text-foreground mb-3">Quantidade</p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 md:h-10 md:w-10"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                    <input
+                      type="number"
+                      min="1"
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      className="flex-1 text-center border border-border rounded-lg py-2 px-2 text-sm md:text-base font-semibold"
+                    />
+                    <Button
+                      onClick={() => setQuantity(quantity + 1)}
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 md:h-10 md:w-10"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
                 {/* CTA Buttons */}
                 <div className="space-y-2 pt-2">
+                  {addedToCart && (
+                    <div className="bg-green-100 text-green-700 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold text-center">
+                      ✓ Produto adicionado ao carrinho
+                    </div>
+                  )}
+                  <Button
+                    onClick={handleAddToCart}
+                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 text-sm md:text-base py-4 md:py-5 font-bold flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+                    Adicionar ao Carrinho
+                  </Button>
                   <Button
                     onClick={() => {
                       const message = `Olá! Tenho interesse no produto: ${product.name}${
