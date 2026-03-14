@@ -415,3 +415,14 @@
 - [x] Manter ícones oficiais Instagram e WhatsApp
 - [x] Manter estilos, bordas e efeitos hover
 - [x] Testar layout final
+
+
+## Substituição de Ícones PNG (Concluído)
+- [x] Copiar ícone Instagram PNG para pasta public
+- [x] Copiar ícone WhatsApp PNG para pasta public
+- [x] Substituir ícone SVG do Instagram pelo PNG
+- [x] Substituir ícone SVG do WhatsApp pelo PNG
+- [x] Manter tamanho proporcional (w-5 h-5)
+- [x] Manter centralização vertical
+- [x] Preservar estilos e efeitos hover
+- [x] Testar visualização dos ícones
