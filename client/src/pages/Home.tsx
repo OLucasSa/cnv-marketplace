@@ -86,6 +86,21 @@ export default function Home() {
           
           {/* Botões e Informações - Lado Direito */}
           <div className="flex items-center gap-3 md:gap-4 ml-auto">
+            {/* Botão Carrinho */}
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary/10 transition-colors"
+              title="Carrinho de compras"
+            >
+              <ShoppingCart className="w-5 h-5 text-accent" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+              <span className="text-sm font-medium text-foreground hidden sm:inline">Carrinho</span>
+            </button>
+            
             {/* Botão Instagram */}
             <a
               href="https://www.instagram.com/cnv_personalizados/"
@@ -100,7 +115,7 @@ export default function Home() {
               <span>Instagram</span>
             </a>
             
-            {/* Botão WhatsApp */}
+            {/* Botão WhatsApp com Número */}
             <a
               href="https://wa.me/5566996066814"
               target="_blank"
@@ -111,36 +126,8 @@ export default function Home() {
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.946 1.227l-.356.214-3.71-.973.992 3.63-.235.374a9.861 9.861 0 001.516 5.394c.732 1.092 1.771 2.041 2.926 2.712 1.154.671 2.478 1.025 3.826 1.025 2.04 0 3.972-.78 5.423-2.008 1.45-1.228 2.26-2.896 2.26-4.648 0-1.227-.237-2.44-.682-3.572-.445-1.132-1.119-2.112-1.973-2.878a9.87 9.87 0 00-3.051-1.852m0 0C12 2 6.477 2 6.477 2s-5.523 0-5.523 5.477c0 5.477 5.523 5.523 5.523 5.523s5.523.046 5.523-5.477C11.977 2 12 2 12 2z"/>
               </svg>
-              <span>WhatsApp</span>
+              <span>(66) 9-9606-6814</span>
             </a>
-            
-            {/* Telefone */}
-            <div className="hidden md:flex flex-col items-end">
-              <a
-                href="https://wa.me/5566996066814"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-foreground hover:text-accent transition-colors"
-              >
-                (66) 9-9606-6814
-              </a>
-              <span className="text-xs text-muted-foreground">Sinop-MT</span>
-            </div>
-            
-            {/* Botão Carrinho */}
-            <button
-              onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary/10 transition-colors ml-2"
-              title="Carrinho de compras"
-            >
-              <ShoppingCart className="w-5 h-5 text-accent" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-              <span className="text-sm font-medium text-foreground hidden sm:inline">Carrinho</span>
-            </button>
           </div>
 
           {/* Cart Panel */}

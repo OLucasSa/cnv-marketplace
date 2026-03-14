@@ -404,3 +404,14 @@
 - [x] Organizar layout: [Logo] [Instagram] [WhatsApp] [Telefone] [Carrinho]
 - [x] Validar responsividade em mobile e desktop
 - [x] Testar que todas as funcionalidades continuam funcionando
+
+
+## Ajustes Visuais do Header (Concluído)
+- [x] Reorganizar ordem: [Carrinho] [Instagram] [WhatsApp]
+- [x] Remover texto "WhatsApp" do botão
+- [x] Substituir por número (66) 9-9606-6814 no botão WhatsApp
+- [x] Remover número duplicado fora do botão
+- [x] Remover "Sinop-MT" do header
+- [x] Manter ícones oficiais Instagram e WhatsApp
+- [x] Manter estilos, bordas e efeitos hover
+- [x] Testar layout final
