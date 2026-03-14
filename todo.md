@@ -426,3 +426,10 @@
 - [x] Manter centralização vertical
 - [x] Preservar estilos e efeitos hover
 - [x] Testar visualização dos ícones
+
+
+## Funcionalidade de Scroll no Botão "Explorar Catálogo" (Concluído)
+- [x] Adicionar useRef para referência da seção de catálogo
+- [x] Implementar scroll suave com scrollIntoView
+- [x] Botão "Explorar Catálogo" rola até seção de produtos
+- [x] Testar funcionalidade de scroll

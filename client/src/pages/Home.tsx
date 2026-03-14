@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { trpc } from '@/lib/trpc';
 // import { categories } from '@/lib/products';
 import type { Product } from '@/lib/products';
@@ -41,6 +41,7 @@ export default function Home() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { getTotalItems } = useCart();
   const totalItems = getTotalItems();
+  const catalogSectionRef = useRef<HTMLElement>(null);
 
   // Buscar produtos do banco de dados via tRPC
   const { data: products = [], isLoading } = trpc.products.list.useQuery();
@@ -149,7 +150,13 @@ export default function Home() {
             </div>
             <div className="flex gap-4">
               <Button
-                onClick={() => setSelectedCategoryId(null)}
+                onClick={() => {
+                  setSelectedCategoryId(null);
+                  // Scroll suave até a seção de catálogo
+                  setTimeout(() => {
+                    catalogSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
                 className="bg-accent text-accent-foreground hover:bg-accent/90"
               >
                 Explorar Catálogo
@@ -185,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* Products Section */}
-      <section className="py-20">
+      <section ref={catalogSectionRef} className="py-20">
         <div className="container">
           <div className="mb-12">
             <p className="text-accent uppercase tracking-widest text-sm font-bold mb-2">
