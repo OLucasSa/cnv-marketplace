@@ -391,3 +391,16 @@
 - [x] Testar persistência em localStorage
 - [x] Testar painel lateral do carrinho
 - [x] Validar responsividade em mobile e desktop
+
+
+## Melhoria Visual do Header (Concluído)
+- [x] Remover texto "CNV Personalizados" - deixar apenas logo
+- [x] Expandir espaço da logo horizontalmente
+- [x] Adicionar botão Instagram com ícone oficial
+- [x] Adicionar botão WhatsApp com ícone oficial
+- [x] Implementar efeito hover nos botões (borda e cor)
+- [x] Manter telefone e localização no lado direito
+- [x] Manter botão carrinho com contador
+- [x] Organizar layout: [Logo] [Instagram] [WhatsApp] [Telefone] [Carrinho]
+- [x] Validar responsividade em mobile e desktop
+- [x] Testar que todas as funcionalidades continuam funcionando
