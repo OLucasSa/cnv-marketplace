@@ -433,3 +433,12 @@
 - [x] Implementar scroll suave com scrollIntoView
 - [x] Botão "Explorar Catálogo" rola até seção de produtos
 - [x] Testar funcionalidade de scroll
+
+
+## Atualização de Textos da Marca (Concluído)
+- [x] Atualizar seção hero com novo título e descrição
+- [x] Reorganizar títulos da seção de catálogo
+- [x] Simplificar textos da seção "Como Funciona"
+- [x] Atualizar informações do rodapé
+- [x] Adicionar Instagram no rodapé
+- [x] Atualizar políticas do rodapé

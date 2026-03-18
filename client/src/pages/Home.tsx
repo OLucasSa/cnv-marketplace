@@ -139,13 +139,13 @@ export default function Home() {
           <div className="space-y-6 z-10">
             <div>
               <p className="text-accent uppercase tracking-widest text-sm font-bold mb-4">
-                Bem-vindo ao Studio
+                Bem-vindo
               </p>
               <h2 className="display text-white mb-4">
-                Personalize Sua Arte
+                Personalização a partir de 01 unidade
               </h2>
               <p className="text-lg text-white/80 leading-relaxed">
-                Transformamos seus produtos em obras-primas únicas através de gravação a laser de alta precisão. Canecas, garrafas, facas e muito mais.
+                Transformamos produtos em algo único. Canecas, garrafas, facas e muito mais.
               </p>
             </div>
             <div className="flex gap-4">
@@ -195,14 +195,14 @@ export default function Home() {
       <section ref={catalogSectionRef} className="py-20">
         <div className="container">
           <div className="mb-12">
-            <p className="text-accent uppercase tracking-widest text-sm font-bold mb-2">
-              Nossos Produtos
-            </p>
             <h2 className="text-4xl font-bold heading text-foreground mb-4">
               Catálogo Completo
             </h2>
+            <p className="text-accent uppercase tracking-widest text-sm font-bold mb-2">
+              Nossos Produtos
+            </p>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Explore nossa coleção de produtos personalizáveis. Cada item pode ser customizado com sua arte, logo ou mensagem especial.
+              Explore nosso catálogo de produtos personalizáveis. Cada item pode ser customizado com sua arte, logo ou mensagem especial.
             </p>
           </div>
 
@@ -290,7 +290,7 @@ export default function Home() {
               Como Funciona
             </p>
             <h2 className="text-4xl font-bold heading text-foreground">
-              Seu Processo de Personalização
+              Processo de Personalização
             </h2>
           </div>
 
@@ -299,17 +299,17 @@ export default function Home() {
               {
                 step: '01',
                 title: 'Escolha o Produto',
-                description: 'Selecione o item que deseja personalizar de nosso catálogo.',
+                description: 'Selecione o item que deseja personalizar do nosso catálogo.',
               },
               {
                 step: '02',
                 title: 'Personalize',
-                description: 'Envie sua arte, logo ou mensagem. Sem limite de cores ou designs.',
+                description: 'Envie sua arte, logo ou mensagem.',
               },
               {
                 step: '03',
                 title: 'Aprovação',
-                description: 'Revise o design até 3 vezes antes de finalizarmos a gravação.',
+                description: 'Revise o design antes de finalizarmos a gravação.',
               },
               {
                 step: '04',
@@ -364,10 +364,7 @@ export default function Home() {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
-              <h3 className="text-lg font-bold heading mb-4">C.N.V. Personalizados</h3>
-              <p className="text-white/70">
-                Gravação a laser de alta precisão para seus produtos especiais.
-              </p>
+              <h3 className="text-lg font-bold heading mb-4">CNV Personalizados</h3>
             </div>
             <div>
               <h4 className="font-bold heading mb-4">Contato</h4>
@@ -379,14 +376,23 @@ export default function Home() {
                   (66) 9-9606-6814
                 </a>
               </p>
+              <p className="text-white/70 mb-2">
+                <a
+                  href="https://www.instagram.com/cnv_personalizados/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent transition-colors"
+                >
+                  @cnv_personalizados
+                </a>
+              </p>
               <p className="text-white/70">Sinop-MT</p>
             </div>
             <div>
               <h4 className="font-bold heading mb-4">Políticas</h4>
               <ul className="space-y-2 text-white/70">
-                <li>Personalização mínima: 01 unidade</li>
-                <li>Até 3 alterações de arte</li>
-                <li>Valores sob consulta</li>
+                <li>Personalização mínima: 01 unidade.</li>
+                <li>Valores sob consulta.</li>
               </ul>
             </div>
           </div>
