@@ -32,7 +32,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
     category: "", // Mantém para compatibilidade com produtos antigos
     categoryId: "", // ID da categoria (novo)
     price: "",
-    stock: 0,
+
     imageUrl: "",
     colors: "",
     sizes: "",
@@ -76,7 +76,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         category: product.category,
         categoryId: product.categoryId ? String(product.categoryId) : "",
         price: product.price,
-        stock: product.stock,
+
         imageUrl: product.imageUrl || "",
         colors: product.colors || "",
         sizes: product.sizes || "",
@@ -106,7 +106,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
         description: formData.description,
         categoryId: categoryIdNumber,
         price: formData.price,
-        stock: formData.stock,
+
         imageUrl: formData.imageUrl,
         colors: formData.colors,
         sizes: formData.sizes,
@@ -181,16 +181,7 @@ export default function ProductForm({ productId, onSuccess, onCancel }: ProductF
           />
         </div>
 
-        <div>
-          <Label htmlFor="stock">Estoque</Label>
-          <Input
-            id="stock"
-            type="number"
-            value={formData.stock}
-            onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-            placeholder="0"
-          />
-        </div>
+
       </div>
 
       <div>

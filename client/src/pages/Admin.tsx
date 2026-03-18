@@ -13,7 +13,7 @@ import ProductsTable from "@/components/ProductsTable";
 import ProductForm from "@/components/ProductForm";
 import BannerSettings from "@/components/BannerSettings";
 import LogoSettings from "@/components/LogoSettings";
-import ColorPresetsManager from "@/components/ColorPresetsManager";
+
 import CategoryManager from "@/components/CategoryManager";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -117,9 +117,6 @@ export default function Admin() {
             <TabsTrigger value="logo" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
               Logo/Ícone
             </TabsTrigger>
-            <TabsTrigger value="presets" className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
-              Presets de Cores
-            </TabsTrigger>
           </TabsList>
 
           {/* Categories Tab */}
@@ -153,10 +150,7 @@ export default function Admin() {
             <LogoSettings />
           </TabsContent>
 
-          {/* Color Presets Tab */}
-          <TabsContent value="presets" className="space-y-6">
-            <ColorPresetsManager />
-          </TabsContent>
+
         </Tabs>
 
         {/* Product Form Dialog */}

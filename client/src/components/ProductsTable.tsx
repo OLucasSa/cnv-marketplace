@@ -115,7 +115,6 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
                 <TableHead>Nome</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead>Preço</TableHead>
-                <TableHead>Estoque</TableHead>
                 <TableHead>Cores</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
@@ -141,11 +140,6 @@ export default function ProductsTable({ onEdit, onDelete, refreshTrigger }: Prod
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell>{product.price}</TableCell>
-                    <TableCell>
-                      <span className={product.stock === 0 ? "text-red-500 font-semibold" : ""}>
-                        {product.stock}
-                      </span>
-                    </TableCell>
                     <TableCell>
                       <ColorBadges colorString={product.colors} />
                     </TableCell>

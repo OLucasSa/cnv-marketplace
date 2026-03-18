@@ -442,3 +442,13 @@
 - [x] Atualizar informações do rodapé
 - [x] Adicionar Instagram no rodapé
 - [x] Atualizar políticas do rodapé
+
+
+## Remoção de Funcionalidades do Painel Admin (Concluído)
+- [x] Remover campo "Estoque" da tabela de produtos
+- [x] Remover campo "Estoque" dos formulários de criação/edição
+- [x] Remover exibição de estoque na interface
+- [x] Remover aba "Presets de Cores" do menu
+- [x] Remover funcionalidade de presets de cores
+- [x] Testar estabilidade do sistema
+- [x] Garantir que cores continuam funcionando sem presets
