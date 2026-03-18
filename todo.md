@@ -462,3 +462,13 @@
 - [x] Ajustar hover states
 - [x] Testar contraste e legibilidade
 - [x] Verificar aplicação em todo o site
+
+
+## Correção de Erro "removeChild" (Concluído)
+- [x] Procurar todas as referências a removeChild
+- [x] Identificar elementos removidos que são referenciados
+- [x] Adicionar validações seguras
+- [x] Remover referências a estoque
+- [x] Remover referências a presets
+- [x] Testar console para erros
+- [x] Verificar funcionalidade do dashboard
