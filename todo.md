@@ -452,3 +452,13 @@
 - [x] Remover funcionalidade de presets de cores
 - [x] Testar estabilidade do sistema
 - [x] Garantir que cores continuam funcionando sem presets
+
+
+## Alteração de Cor Principal (Concluído)
+- [x] Localizar definição de cores (CSS/Tailwind)
+- [x] Substituir amarelo pela cor #eaae29
+- [x] Aplicar em botões principais
+- [x] Aplicar em elementos de destaque
+- [x] Ajustar hover states
+- [x] Testar contraste e legibilidade
+- [x] Verificar aplicação em todo o site

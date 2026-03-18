@@ -44,11 +44,11 @@
 
 :root {
   /* Industrial Luxe Color Palette */
-  --primary: #FFD700; /* Amarelo Ouro */
+  --primary: #eaae29; /* Amarelo Ouro */
   --primary-foreground: #1a1a1a; /* Preto Profundo */
-  --sidebar-primary: #FFD700;
+  --sidebar-primary: #eaae29;
   --sidebar-primary-foreground: #1a1a1a;
-  --chart-1: #FFD700;
+  --chart-1: #eaae29;
   --chart-2: #B87333; /* Cobre */
   --chart-3: #3a3a3a; /* Cinza Carvão */
   --chart-4: #1a1a1a;
@@ -64,26 +64,26 @@
   --secondary-foreground: #FFFFFF;
   --muted: #CCCCCC;
   --muted-foreground: #666666;
-  --accent: #FFD700; /* Amarelo Ouro */
+  --accent: #eaae29; /* Amarelo Ouro */
   --accent-foreground: #1a1a1a;
   --destructive: #FF4444;
   --destructive-foreground: #FFFFFF;
   --border: #E0E0E0;
   --input: #F5F5F5;
-  --ring: #FFD700;
+  --ring: #eaae29;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-accent: #FFD700;
+  --sidebar-accent: #eaae29;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #E0E0E0;
-  --sidebar-ring: #FFD700;
+  --sidebar-ring: #eaae29;
 }
 
 .dark {
   /* Dark theme for Industrial Luxe */
-  --primary: #FFD700;
+  --primary: #eaae29;
   --primary-foreground: #1a1a1a;
-  --sidebar-primary: #FFD700;
+  --sidebar-primary: #eaae29;
   --sidebar-primary-foreground: #1a1a1a;
   --background: #1a1a1a;
   --foreground: #FFFFFF;
@@ -95,24 +95,24 @@
   --secondary-foreground: #FFFFFF;
   --muted: #555555;
   --muted-foreground: #AAAAAA;
-  --accent: #FFD700;
+  --accent: #eaae29;
   --accent-foreground: #1a1a1a;
   --destructive: #FF4444;
   --destructive-foreground: #FFFFFF;
   --border: #333333;
   --input: #2a2a2a;
-  --ring: #FFD700;
-  --chart-1: #FFD700;
+  --ring: #eaae29;
+  --chart-1: #eaae29;
   --chart-2: #B87333;
   --chart-3: #3a3a3a;
   --chart-4: #1a1a1a;
   --chart-5: #FFFFFF;
   --sidebar: #2a2a2a;
   --sidebar-foreground: #FFFFFF;
-  --sidebar-accent: #FFD700;
+  --sidebar-accent: #eaae29;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #333333;
-  --sidebar-ring: #FFD700;
+  --sidebar-ring: #eaae29;
 }
 
 @layer base {
