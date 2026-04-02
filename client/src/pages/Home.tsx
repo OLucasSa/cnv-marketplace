@@ -107,11 +107,11 @@ export default function Home() {
               href="https://www.instagram.com/cnv_personalizados/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-2 px-3 py-2 border border-border rounded-lg hover:border-accent hover:text-accent transition-colors text-sm text-foreground"
+              className="flex items-center gap-2 px-2 sm:px-3 py-2 border border-border rounded-lg hover:border-accent hover:text-accent transition-colors text-xs sm:text-sm text-foreground"
               title="Instagram"
             >
-              <img src="/icon-instagram.png" alt="Instagram" className="w-5 h-5 object-contain" />
-              <span>Instagram</span>
+              <img src="/icon-instagram.png" alt="Instagram" className="w-4 sm:w-5 h-4 sm:h-5 object-contain" />
+              <span className="hidden sm:inline">Instagram</span>
             </a>
             
             {/* Botão WhatsApp com Número */}
@@ -119,11 +119,11 @@ export default function Home() {
               href="https://wa.me/5566996066814"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-2 px-3 py-2 border border-border rounded-lg hover:border-accent hover:text-accent transition-colors text-sm text-foreground"
+              className="flex items-center gap-2 px-2 sm:px-3 py-2 border border-border rounded-lg hover:border-accent hover:text-accent transition-colors text-xs sm:text-sm text-foreground"
               title="WhatsApp"
             >
-              <img src="/icon-whatsapp.png" alt="WhatsApp" className="w-5 h-5 object-contain" />
-              <span>(66) 9-9606-6814</span>
+              <img src="/icon-whatsapp.png" alt="WhatsApp" className="w-4 sm:w-5 h-4 sm:h-5 object-contain" />
+              <span className="hidden sm:inline">(66) 9-9606-6814</span>
             </a>
           </div>
 
@@ -133,7 +133,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-foreground via-secondary to-foreground py-8 md:py-12 md:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-foreground via-secondary to-foreground py-12 md:py-32">
         <div className="container flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-6 z-10">
@@ -174,9 +174,9 @@ export default function Home() {
           </div>
 
           {/* Right Decorative Element with Banner Image */}
-          <div className="relative h-96 hidden md:flex">
-            <div className="absolute inset-0 bg-accent/20 rounded-3xl transform rotate-6" />
-            <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center overflow-hidden">
+          <div className="relative w-full h-64 sm:h-80 md:h-96 flex">
+            <div className="hidden md:absolute md:inset-0 md:bg-accent/20 md:rounded-3xl md:transform md:rotate-6" />
+            <div className="w-full h-full md:absolute md:inset-4 md:bg-accent/10 md:rounded-2xl md:transform md:-rotate-3 flex items-center justify-center overflow-hidden bg-accent/5 rounded-2xl md:rounded-none">
               <BannerImageDisplay />
             </div>
           </div>
@@ -209,9 +209,9 @@ export default function Home() {
           {/* Category Tabs - Mobile Responsive */}
           <Tabs
             value={selectedCategoryId === null ? 'all' : String(selectedCategoryId)}
-            className="mb-12"
+            className="mb-12 w-full"
           >
-            <TabsList className="bg-secondary/10 border border-border overflow-x-auto overflow-y-hidden flex-nowrap w-full md:w-auto">
+            <TabsList className="bg-secondary/10 border border-border overflow-x-auto overflow-y-hidden flex-nowrap w-full h-auto p-1 gap-1 justify-start md:justify-start">
               <TabsTrigger 
                 value="all" 
                 onClick={() => setSelectedCategoryId(null)}
@@ -283,18 +283,18 @@ export default function Home() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 md:py-20 bg-secondary/5">
+      <section className="py-12 md:py-20 bg-secondary/5">
         <div className="container">
-          <div className="mb-12">
+          <div className="mb-8 md:mb-12">
             <p className="text-accent uppercase tracking-widest text-sm font-bold mb-2">
               Como Funciona
             </p>
-            <h2 className="text-4xl font-bold heading text-foreground">
+            <h2 className="text-3xl md:text-4xl font-bold heading text-foreground">
               Processo de Personalização
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
             {[
               {
                 step: '01',
@@ -318,14 +318,14 @@ export default function Home() {
               },
             ].map((item, idx) => (
               <div key={idx} className="relative">
-                <div className="bg-white border-2 border-border rounded-lg p-6 hover:border-accent transition-colors">
-                  <div className="text-4xl font-bold heading text-accent/20 mb-4">
+                <div className="bg-white border-2 border-border rounded-lg p-4 md:p-6 hover:border-accent transition-colors">
+                  <div className="text-3xl md:text-4xl font-bold heading text-accent/20 mb-3 md:mb-4">
                     {item.step}
                   </div>
-                  <h3 className="text-lg font-bold heading text-foreground mb-2">
+                  <h3 className="text-base md:text-lg font-bold heading text-foreground mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                     {item.description}
                   </p>
                 </div>

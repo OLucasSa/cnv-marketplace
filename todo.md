@@ -483,3 +483,12 @@
 - [x] Padronizar espaçamentos
 - [x] Testar responsividade mobile
 - [x] Testar responsividade desktop
+
+
+## Correção de Problemas Visuais Mobile (Concluído)
+- [x] Restaurar elementos desaparecidos (botões, banner)
+- [x] Corrigir posicionamento do banner no mobile
+- [x] Remover distorções de layout
+- [x] Ajustar barra de categorias
+- [x] Melhorar espaçamento geral
+- [x] Testar visibilidade de todos os elementos
