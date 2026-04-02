@@ -133,8 +133,8 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-foreground via-secondary to-foreground py-20 md:py-32">
-        <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-foreground via-secondary to-foreground py-8 md:py-12 md:py-32">
+        <div className="container flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-6 z-10">
             <div>
@@ -148,7 +148,7 @@ export default function Home() {
                 Transformamos produtos em algo único. Canecas, garrafas, facas e muito mais.
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
                 onClick={() => {
                   setSelectedCategoryId(null);
@@ -174,7 +174,7 @@ export default function Home() {
           </div>
 
           {/* Right Decorative Element with Banner Image */}
-          <div className="relative h-96 hidden md:block">
+          <div className="relative h-96 hidden md:flex">
             <div className="absolute inset-0 bg-accent/20 rounded-3xl transform rotate-6" />
             <div className="absolute inset-4 bg-accent/10 rounded-2xl transform -rotate-3 flex items-center justify-center overflow-hidden">
               <BannerImageDisplay />
@@ -206,12 +206,12 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Category Tabs */}
+          {/* Category Tabs - Mobile Responsive */}
           <Tabs
             value={selectedCategoryId === null ? 'all' : String(selectedCategoryId)}
             className="mb-12"
           >
-            <TabsList className="bg-secondary/10 border border-border">
+            <TabsList className="bg-secondary/10 border border-border overflow-x-auto overflow-y-hidden flex-nowrap w-full md:w-auto">
               <TabsTrigger 
                 value="all" 
                 onClick={() => setSelectedCategoryId(null)}
@@ -271,7 +271,7 @@ export default function Home() {
                 })}
               </div>
               {filteredProducts.length === 0 && (
-                <div className="text-center py-12">
+                <div className="text-center py-8 md:py-12">
                   <p className="text-lg text-muted-foreground">
                     Nenhum produto encontrado nesta categoria.
                   </p>
@@ -283,7 +283,7 @@ export default function Home() {
       </section>
 
       {/* Process Section */}
-      <section className="py-20 bg-secondary/5">
+      <section className="py-16 md:py-20 bg-secondary/5">
         <div className="container">
           <div className="mb-12">
             <p className="text-accent uppercase tracking-widest text-sm font-bold mb-2">
@@ -330,7 +330,7 @@ export default function Home() {
                   </p>
                 </div>
                 {idx < 3 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-1 bg-accent/20 transform -translate-y-1/2" />
+                  <div className="hidden md:flex absolute top-1/2 -right-3 w-6 h-1 bg-accent/20 transform -translate-y-1/2" />
                 )}
               </div>
             ))}
@@ -339,7 +339,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-foreground text-white">
+      <section className="py-16 md:py-20 bg-foreground text-white">
         <div className="container text-center">
           <h2 className="text-4xl font-bold heading mb-4">
             Pronto para Personalizar?
@@ -360,9 +360,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-secondary text-white py-12">
+      <footer className="bg-secondary text-white py-8 md:py-12">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-8">
             <div>
               <h3 className="text-lg font-bold heading mb-4">CNV Personalizados</h3>
             </div>

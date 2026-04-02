@@ -472,3 +472,14 @@
 - [x] Remover referências a presets
 - [x] Testar console para erros
 - [x] Verificar funcionalidade do dashboard
+
+
+## Refinamento Visual Mobile-First (Concluído)
+- [x] Corrigir barra de categorias (overflow-x, flex)
+- [x] Reorganizar banner/hero section para mobile
+- [x] Melhorar cards de produtos
+- [x] Ajustar hierarquia visual
+- [x] Refinar seção "Processo de Personalização"
+- [x] Padronizar espaçamentos
+- [x] Testar responsividade mobile
+- [x] Testar responsividade desktop

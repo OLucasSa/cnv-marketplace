@@ -40,7 +40,7 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image */}
-      <div className="relative h-64 bg-gray-100 overflow-hidden flex items-center justify-center">
+      <div className="relative h-56 sm:h-64 bg-gray-100 overflow-hidden flex items-center justify-center">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -78,19 +78,19 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         )}
       </div>
       {/* Product Info */}
-      <div className="p-4">
-        <p className="text-xs font-semibold text-accent uppercase tracking-wider mb-2">
+      <div className="p-4 sm:p-5 space-y-3">
+        <p className="text-xs font-semibold text-accent uppercase tracking-wider">
           {product.category}
         </p>
-        <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2 heading">
+        <h3 className="text-base sm:text-lg font-bold text-foreground line-clamp-2 heading">
           {product.name}
         </h3>
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
           {product.description}
         </p>
         {/* Specifications Preview */}
-        <div className="mb-4 space-y-1">
-          <p className="text-xs text-muted-foreground">
+        <div className="space-y-1">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             <span className="font-semibold">Material:</span> {specifications.material || 'Personalizado'}
           </p>
           {specifications.capacity && (
@@ -105,7 +105,7 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         {/* CTA Button */}
         <Button
           onClick={() => onViewDetails(product)}
-          className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 group/btn"
+          className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 group/btn mt-4 sm:mt-6"
         >
           Ver Detalhes
           <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
